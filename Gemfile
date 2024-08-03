@@ -5,8 +5,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gemspec
 
 gem "puma"
-
+gem "pg"
 gem "sprockets-rails"
+gem "sprockets", ">= 4.0.3"
+gem "jsbundling-rails"
+gem "view_component"
 
 # Start debugger with binding.b [https://github.com/ruby/debug]
 # gem "debug", ">= 1.0.0"
+gem "byebug", group: %i[development test]
+gem "dotenv-rails", groups: %i[development test]

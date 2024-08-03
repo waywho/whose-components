@@ -1,4 +1,7 @@
-spec.name        = "whose-components"
+require_relative "lib/whose/components/version"
+
+Gem::Specification.new do |spec|
+  spec.name        = "whose-components"
   spec.version     = Whose::Components::VERSION
   spec.authors     = ["WeiHsi Hu"]
   # spec.email       = ["walzerfan@yahoo.com"]
@@ -21,3 +24,11 @@ spec.name        = "whose-components"
   end
 
   spec.add_dependency "rails", ">= 7.1.3.2"
+  spec.add_dependency "haml", ">= 6.0.0"
+  spec.add_dependency "haml-rails", ">= 2.1.0"
+  spec.add_dependency "lookbook", ">= 2.0.0.beta.0", "< 3.0"
+  spec.add_dependency "turbo-rails", "= 1.4.0"
+  spec.add_dependency "view_component", "~> 3.1"
+  spec.add_dependency "view_component-form", "~> 0.2.5"
+  spec.add_dependency "tailwindcss-rails", "~> 2.6.5"
+end
