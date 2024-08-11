@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "rails", ">= 7.1.3.2"
+  spec.add_dependency "railties", ">= 6.0", "< 8"
   spec.add_dependency "haml", ">= 6.0.0"
   spec.add_dependency "haml-rails", ">= 2.1.0"
   spec.add_dependency "lookbook", ">= 2.0.0.beta.0", "< 3.0"
