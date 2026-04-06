@@ -5,10 +5,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 gemspec
 
 gem "puma"
-gem "pg"
-gem "sprockets-rails"
-gem "sprockets", ">= 4.0.3"
-gem "jsbundling-rails"
 gem "view_component"
 
 # Start debugger with binding.b [https://github.com/ruby/debug]

@@ -23,13 +23,13 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails", ">= 7.1.3.2"
-  spec.add_dependency "railties", ">= 6.0", "< 8"
+  spec.add_dependency "rails", ">= 7.1"
+  spec.add_dependency "railties", ">= 7.1", "< 9"
   spec.add_dependency "haml", ">= 6.0.0"
   spec.add_dependency "haml-rails", ">= 2.1.0"
   spec.add_dependency "lookbook", ">= 2.0.0.beta.0", "< 3.0"
-  spec.add_dependency "turbo-rails", "= 1.4.0"
+  spec.add_dependency "turbo-rails", ">= 1.4", "< 3"
   spec.add_dependency "view_component", "~> 3.1"
-  spec.add_dependency "view_component-form", "~> 0.2.5"
-  spec.add_dependency "tailwindcss-rails", "~> 2.6.5"
+  spec.add_dependency "view_component-form", ">= 0.2.5", "< 1.0"
+  spec.add_dependency "tailwindcss-rails", ">= 2.6", "< 5"
 end
