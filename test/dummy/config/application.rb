@@ -22,5 +22,10 @@ module Dummy
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # ViewComponent
+    config.view_component.generate_sidecar = true
+    config.view_component.generate.preview = true
+    config.view_component.default_preview_layout = "component_preview"
   end
 end
