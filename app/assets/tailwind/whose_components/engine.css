@@ -1,0 +1,62 @@
+@source "../../../components";
+@source "../../../views";
+
+:root {
+  --whose-canvas: var(--color-stone-50);
+  --whose-surface: var(--color-white);
+  --whose-fg: var(--color-stone-900);
+  --whose-muted: var(--color-stone-500);
+  --whose-border: var(--color-stone-200);
+  --whose-accent: var(--color-indigo-600);
+  --whose-on-accent: var(--color-white);
+  --whose-accent-soft: var(--color-indigo-100);
+  --whose-accent-text: var(--color-indigo-700);
+  --whose-positive: var(--color-green-700);
+  --whose-positive-soft: var(--color-green-100);
+  --whose-negative: var(--color-red-700);
+  --whose-negative-soft: var(--color-red-100);
+  --whose-warning: var(--color-amber-700);
+  --whose-warning-soft: var(--color-amber-100);
+  --whose-radius: 0.375rem;
+  --whose-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --whose-canvas: var(--color-stone-950);
+    --whose-surface: var(--color-stone-900);
+    --whose-fg: var(--color-stone-50);
+    --whose-muted: var(--color-stone-300);
+    --whose-border: var(--color-stone-700);
+    --whose-accent: var(--color-violet-800);
+    --whose-on-accent: var(--color-white);
+    --whose-accent-soft: var(--color-violet-950);
+    --whose-accent-text: var(--color-violet-200);
+    --whose-positive: var(--color-green-300);
+    --whose-positive-soft: var(--color-green-950);
+    --whose-negative: var(--color-red-300);
+    --whose-negative-soft: var(--color-red-950);
+    --whose-warning: var(--color-amber-300);
+    --whose-warning-soft: var(--color-amber-950);
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--whose-canvas);
+  --color-surface: var(--whose-surface);
+  --color-fg: var(--whose-fg);
+  --color-muted: var(--whose-muted);
+  --color-border: var(--whose-border);
+  --color-accent: var(--whose-accent);
+  --color-on-accent: var(--whose-on-accent);
+  --color-accent-soft: var(--whose-accent-soft);
+  --color-accent-text: var(--whose-accent-text);
+  --color-positive: var(--whose-positive);
+  --color-positive-soft: var(--whose-positive-soft);
+  --color-negative: var(--whose-negative);
+  --color-negative-soft: var(--whose-negative-soft);
+  --color-warning: var(--whose-warning);
+  --color-warning-soft: var(--whose-warning-soft);
+  --radius-box: var(--whose-radius);
+  --font-sans: var(--whose-font-sans);
+}
