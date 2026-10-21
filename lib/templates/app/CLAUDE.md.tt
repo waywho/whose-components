@@ -1,0 +1,150 @@
+# <%= app_name.titleize %>
+
+## Commands
+
+```sh
+bin/dev                      # Start the server, the Tailwind watcher and the jobs
+bin/rails test               # Run the unit, controller and integration tests
+bin/rails test:system        # Run the system tests
+bin/rails test test/models/user_test.rb:42   # Run one test
+bin/rubocop -A               # Fix style. Run it after each change to Ruby files
+bin/brakeman                 # Scan for security problems
+```
+
+## Workflow
+
+- Before you do work, say how to verify it.
+- After a change, run the related tests and `bin/rubocop`.
+- Never commit to `main`. Work on a feature branch.
+- Never commit unless the owner asks. One commit for each completed task.
+- A commit message is one line: a subject and nothing else.
+- Explain the approach before a large change.
+- Keep pull requests small and about one topic.
+
+## Testing
+
+Minitest, `factory_bot` and parallel tests. Factories are in `test/factories/`.
+Use `create` and `build` directly, never `FactoryBot.create`.
+
+### Work test-first
+
+Before you change code, run only a new test.
+
+- **An existing test covers the change, and the behaviour stays the same:**
+  do not run it first. Make the change, then run that test.
+- **No test covers the change:** write a new test. Run it and see it fail.
+  Make the change. Run it and see it pass.
+- **The change changes behaviour:** do not edit the existing test. Write a new
+  test for the new behaviour. Run it and see it fail. Make the change. Run both
+  tests. The existing test must now fail and the new test must pass. Then
+  update or delete the existing test so that the suite passes. Report each
+  existing test that you changed or deleted, and the behaviour that it tested.
+- **A bug fix:** the new test must fail against the code before the fix. If
+  that is not practical, say so. Do not assume that the test would have caught
+  the bug.
+
+### A failing test is a question
+
+- Before you change anything, decide whether the code or the expectation is
+  wrong, and say which.
+- Never make a failing test pass by weakening it. Do not loosen a selector,
+  widen a matcher, drop an assertion, add a stub, or change the setup until
+  the test passes.
+- A changed expectation means the behaviour changed on purpose. Say what now
+  behaves differently and why, in the reply and not only in the diff.
+
+### What to test, and how
+
+- Every new model, controller, job, service and component needs a test.
+- Do not test a helper that only renders markup from the data that it gets.
+  Test a helper that has logic: a calculation, a branch, an ordering rule.
+- Do not write a test that only checks that a factory is valid.
+- Never stub what the test can use for real. Stub only external services:
+  HTTP, third-party APIs, clocks that you cannot control. Assert on effects
+  that you can see: database rows, enqueued jobs, the response.
+- Controller and integration tests check the status, the redirect, the flash
+  and the side effects. They never check the rendered markup. Test markup in a
+  component test.
+- System tests check what a user can do: click, navigate, submit, open a menu.
+  A test that only checks that content is on the page belongs in a component
+  test.
+- In a system test, never select by a Tailwind class, and never assert styling.
+  Select by `id`, `dom_id`, a `data-*` attribute, a role or a label.
+
+## Conventions
+
+- Use the generators from Rails or an installed gem to make files. Write a file
+  by hand only when no generator covers it. `bin/rails generate --help` lists
+  them.
+- RESTful controllers with the standard actions. Keep controllers thin. Put
+  logic in models and services.
+- ActiveRecord scopes over Ruby enumerables. Raw SQL only when necessary: say
+  why, and guard against SQL injection.
+- Prevent N+1 queries with `includes`. Add indexes for frequent queries.
+- Order by `id`, not `created_at`.
+- Use `:unprocessable_content` (422), not `:unprocessable_entity`.
+- UI: use the `whose-components` components before you write new markup. Check
+  Lookbook (`/lookbook`) for the existing pattern.
+- A new layout for a page never removes a function. Every link, action and
+  filter on the old page must exist on the new page.
+- After a UI change, click through it in a browser (Playwright) before you say
+  that the task is done.
+
+## Views
+
+- HAML.
+- Do not assign local variables at the top of a partial. Move derived values to
+  a helper, a presenter or the caller.
+- Never call `render` from a helper to choose a partial. Branch in the view.
+
+## Ruby style
+
+- Every Ruby file starts with `# frozen_string_literal: true`.
+- Implicit hash values: `foo:`, not `foo: foo`, in hash literals and in keyword
+  arguments. Fix the old form on each line that you touch.
+- `filter_map` over `select` and then `map`.
+- Ruby 3.4 `it`: `{ it["key"] }`, not `{ |e| e["key"] }`.
+
+## Comments
+
+Write no comments. That is the default, and it is almost always correct.
+
+The test for an exception: name the wrong conclusion that the next reader makes
+without the comment. If you cannot name one, write no comment.
+
+Two kinds of comment pass the test:
+
+- A business rule that the code cannot state.
+- Behaviour that surprises: a hidden constraint, a bug workaround, a reason for
+  performance or correctness that is not clear. Give a concrete example with
+  real values.
+
+Do not write a comment that:
+
+- Says what the code does.
+- Explains the change that you just made. That belongs in the commit.
+- Confirms that the code works as written ("as expected", "intentional").
+- Describes the task, the ticket or the pull request.
+- Explains a standard Rails, Minitest or factory_bot idiom.
+- Explains a Tailwind class, a layout or a style choice.
+
+## Writing
+
+Use the `asd-ste100` skill (in `.claude/skills/asd-ste100/`) before you write
+or edit English text. Write the text that the skill returns.
+
+- **Strict mode** for text that a machine or a user reads and acts on: error
+  and flash messages, exception messages, validation messages, tool and job
+  descriptions.
+- **STE-flavored mode** for the rest: replies, commit messages, pull request
+  titles and bodies, review comments, code comments and docs.
+
+Replies:
+
+- Give the result in the first sentence. Then bullets, at most four.
+- Under 120 words. Code blocks do not count.
+- Short, complete sentences. Ordinary words. No filler and no hedging.
+- Cite `file:line` for each claim about code. Check before you assert.
+- Report only a problem that you can show is reachable, and name the path.
+- One topic for each reply. One recommendation, not a menu. Label each
+  alternative "Option A", "Option B".
