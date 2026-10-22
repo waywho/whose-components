@@ -6,7 +6,8 @@ require "generators/whose/components/views/views_generator"
 
 class Whose::Components::Generators::ViewsGeneratorTest < Rails::Generators::TestCase
   tests Whose::Components::Generators::ViewsGenerator
-  destination File.expand_path("../../../../tmp/generator", __dir__)
+  # Tests run in parallel processes, and a shared folder lets one process delete another's files.
+  def destination_root = File.expand_path("../../../../tmp/generator/#{Process.pid}", __dir__)
 
   setup { prepare_destination }
 
