@@ -16,7 +16,8 @@
       - nav.with_brand { "<%= app_title %>" }
       - nav.with_item(label: "Home", href: "/")
 <%- if options[:auth] -%>
-      - nav.with_actions { button_to t("whose.nav.sign_out"), session_path, method: :delete }
+      - if authenticated?
+        - nav.with_actions { button_to t("whose.nav.sign_out"), session_path, method: :delete }
 <%- end -%>
     = render Whose::FlashComponent.new(flash:)
     %main.mx-auto.max-w-5xl.px-4.py-6
