@@ -5,6 +5,8 @@ require "action_view"
 module Whose
   module Components
     class FormBuilder < ActionView::Helpers::FormBuilder
+      delegate :render, :tag, :content_tag, :safe_join, :t, to: :@template
+
       %i[text_field email_field number_field telephone_field phone_field url_field date_field].each do |type|
         define_method(type) do |method, label: nil, hint: nil, **options|
           field(method, label:, hint:, placeholder: true) { |component| super(method, **input_options(component, options)) }
@@ -15,8 +17,8 @@ module Whose
         field(method, label:, hint:, placeholder: true) do |component|
           options[:data] = { whose_password_visibility_target: "input" }.merge(options[:data] || {})
           input = super(method, **input_options(component, options, field_classes[:password_input]))
-          @template.content_tag(:div, class: field_classes[:password_wrapper], data: { controller: "whose-password-visibility" }) do
-            @template.safe_join([ input, password_button ])
+          content_tag(:div, class: field_classes[:password_wrapper], data: { controller: "whose-password-visibility" }) do
+            safe_join([ input, password_button ])
           end
         end
       end
@@ -51,16 +53,16 @@ module Whose
       end
 
       def submit(value = nil, **options)
-        button = @template.render(Whose::ButtonComponent.new(type: "submit", **options)) { value || submit_default_value }
+        button = render(Whose::ButtonComponent.new(type: "submit", **options)) { value || submit_default_value }
         return button unless layout == :inline && labels == :visible
 
-        @template.tag.div(label_spacer + button, class: "flex flex-col gap-1")
+        tag.div(label_spacer + button, class: "flex flex-col gap-1")
       end
 
       private
 
       def label_spacer
-        @template.tag.span("&nbsp;".html_safe, class: "hidden text-sm font-medium sm:block", aria: { hidden: true })
+        tag.span("&nbsp;".html_safe, class: "hidden text-sm font-medium sm:block", aria: { hidden: true })
       end
 
       def field_classes
@@ -78,7 +80,7 @@ module Whose
       def field(method, label:, hint:, inline: false, placeholder: false, &block)
         component = Whose::Form::FieldComponent.new(form: self, method:, label:, hint:, layout:, inline:,
                                                     placeholder_label: placeholder && labels == :placeholder)
-        @template.render(component) { block.call(component) }
+        render(component) { block.call(component) }
       end
 
       def input_options(component, options, extra_class = nil)
@@ -98,12 +100,12 @@ module Whose
       end
 
       def password_button
-        @template.content_tag(:button, type: "button", class: field_classes[:password_button],
-                                       data: { action: "whose-password-visibility#toggle" }) do
-          @template.safe_join([
-            @template.content_tag(:span, @template.t("whose.form.show"), data: { whose_password_visibility_target: "icon" }),
-            @template.content_tag(:span, @template.t("whose.form.hide"), class: field_classes[:password_hidden],
-                                                                          data: { whose_password_visibility_target: "icon" })
+        content_tag(:button, type: "button", class: field_classes[:password_button],
+                             data: { action: "whose-password-visibility#toggle" }) do
+          safe_join([
+            content_tag(:span, t("whose.form.show"), data: { whose_password_visibility_target: "icon" }),
+            content_tag(:span, t("whose.form.hide"), class: field_classes[:password_hidden],
+                                                     data: { whose_password_visibility_target: "icon" })
           ])
         end
       end
