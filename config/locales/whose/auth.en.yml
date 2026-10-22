@@ -1,0 +1,11 @@
+en:
+  whose:
+    sessions:
+      invalid: The email address or the password is not correct.
+      signed_out: You signed out.
+      rate_limited: Too many attempts. Try again later.
+      new:
+        title: Sign in
+        email_address: Email address
+        password: Password
+        submit: Sign in
