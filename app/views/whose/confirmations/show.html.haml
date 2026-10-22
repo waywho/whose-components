@@ -3,4 +3,4 @@
     - card.with_header do
       %h1.text-lg= t(".title")
     = whose_form_with url: confirmation_path(params[:token]), method: :patch do |form|
-      = form.submit t(".submit"), class: "w-full"
+      = form.submit t(".submit"), full: true

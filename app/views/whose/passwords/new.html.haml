@@ -8,4 +8,4 @@
       .flex.flex-col.gap-4
         = form.email_field :email_address, label: t(".email_address"), required: true, autofocus: true,
           autocomplete: "username"
-        = form.submit t(".submit"), class: "w-full"
+        = form.submit t(".submit"), full: true

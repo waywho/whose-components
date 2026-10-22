@@ -12,6 +12,7 @@
 :root {
   --whose-canvas: var(--color-stone-50);
   --whose-surface: var(--color-white);
+  --whose-subtle: var(--color-stone-100);
   --whose-fg: var(--color-stone-900);
   --whose-muted: var(--color-stone-500);
   --whose-border: var(--color-stone-200);
@@ -34,6 +35,7 @@
   :root {
     --whose-canvas: var(--color-stone-950);
     --whose-surface: var(--color-stone-900);
+    --whose-subtle: var(--color-stone-800);
     --whose-fg: var(--color-stone-50);
     --whose-muted: var(--color-stone-300);
     --whose-border: var(--color-stone-700);
@@ -53,6 +55,7 @@
 @theme inline {
   --color-canvas: var(--whose-canvas);
   --color-surface: var(--whose-surface);
+  --color-subtle: var(--whose-subtle);
   --color-fg: var(--whose-fg);
   --color-muted: var(--whose-muted);
   --color-border: var(--whose-border);

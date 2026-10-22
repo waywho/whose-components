@@ -17,6 +17,10 @@ class Whose::ButtonComponentPreview < ViewComponent::Preview
     render(Whose::ButtonComponent.new(variant: :invisible)) { "Invisible" }
   end
 
+  def full
+    render(Whose::ButtonComponent.new(full: true)) { "Full width" }
+  end
+
   def small
     render(Whose::ButtonComponent.new(size: :sm)) { "Small" }
   end

@@ -29,9 +29,29 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
   end
 
   def test_button_keeps_given_class_next_to_its_own
-    render_inline(Whose::ButtonComponent.new(class: "w-full")) { "Save" }
+    render_inline(Whose::ButtonComponent.new(class: "mt-4")) { "Save" }
 
-    assert_selector "button.w-full.bg-accent"
+    assert_selector "button.mt-4.bg-accent"
+  end
+
+  def test_button_is_as_wide_as_its_content_by_default
+    render_inline(Whose::ButtonComponent.new) { "Save" }
+
+    assert_selector "button.w-fit"
+    assert_no_selector "button.w-full"
+  end
+
+  def test_full_button_fills_its_container
+    render_inline(Whose::ButtonComponent.new(full: true)) { "Save" }
+
+    assert_selector "button.w-full"
+    assert_no_selector "button.w-fit"
+  end
+
+  def test_secondary_button_has_a_subtle_background
+    render_inline(Whose::ButtonComponent.new(variant: :secondary)) { "Back" }
+
+    assert_selector "button.bg-subtle", text: "Back"
   end
 
   def test_invisible_button_has_no_background
