@@ -94,7 +94,7 @@ This starts the server and the Tailwind watcher on port 3000.
 - `http://localhost:3000/lookbook` shows each component.
 - Mail in development opens in the browser with `letter_opener`.
 
-Code in `lib/`, such as the form builder, does not reload. After you change it, run `bin/restart` in another terminal. It restarts the running server, so you do not need to stop `bin/dev`.
+Code in `lib/`, such as the form builder, does not reload. After you change it, run `bin/rails restart` from the repo root in another terminal. It restarts the running server, so you do not need to stop `bin/dev`.
 
 ### Run the tests
 ```bash
