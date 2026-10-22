@@ -24,3 +24,4 @@ jobs:
           bundler-cache: true
       - run: bin/rails app:tailwindcss:build
       - run: bin/rails test
+      - run: bin/rails test test/system

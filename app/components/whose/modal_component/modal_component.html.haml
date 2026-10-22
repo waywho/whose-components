@@ -1,0 +1,12 @@
+%div{ data: { controller: "whose-dialog", action: "click->whose-dialog#backdropClose" } }
+  %span.contents{ data: { action: "click->whose-dialog#open" } }= trigger
+  %dialog{ class: "m-auto w-full max-w-lg rounded-box border border-border bg-surface p-0 font-sans text-fg shadow-xl backdrop:bg-black/50",
+           aria: { labelledby: @title_id },
+           data: { whose_dialog_target: "dialog" } }
+    .flex.flex-col.gap-4.p-6
+      .flex.items-start.justify-between.gap-4
+        %h2.text-lg.font-semibold{ id: @title_id }= @title
+        %button.shrink-0.cursor-pointer.rounded-box.px-1.opacity-70.hover:opacity-100.focus-visible:outline-2.focus-visible:outline-offset-2.focus-visible:outline-accent{ type: "button", aria: { label: t("whose.dialog.close") }, data: { action: "whose-dialog#close" } } &times;
+      .text-sm= content
+      - if footer?
+        .flex.justify-end.gap-2.border-t.border-border.pt-4= footer
