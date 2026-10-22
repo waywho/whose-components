@@ -7,6 +7,7 @@ module Whose
         resource :session, only: %i[new create destroy], controller: "whose/sessions"
         resource :registration, only: %i[new create], controller: "whose/registrations"
         resources :confirmations, only: %i[new create show update], param: :token, controller: "whose/confirmations"
+        resources :passwords, only: %i[new create edit update], param: :token, controller: "whose/passwords"
       end
     end
   end

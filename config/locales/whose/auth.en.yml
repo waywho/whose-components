@@ -12,6 +12,7 @@ en:
         submit: Sign in
         sign_up: Create an account
         resend: Send a new confirmation link
+        forgot_password: Forgot your password?
     registrations:
       created: We sent you an email. Open the link in it to confirm your email address.
       new:
@@ -35,7 +36,26 @@ en:
       show:
         title: Confirm your email address
         submit: Confirm email address
+    passwords:
+      sent: If the email address has an account, we sent a link to reset the password.
+      updated: Your password is changed. Sign in with the new password.
+      invalid: The link is not valid or it expired. Ask for a new link.
+      new:
+        title: Reset your password
+        email_address: Email address
+        submit: Send the link
+        sign_in: Sign in
+      edit:
+        title: Choose a new password
+        password: New password
+        password_confirmation: Confirm the new password
+        submit: Change password
     auth_mailer:
+      password_reset:
+        subject: Reset your password
+        instruction: Open this link to choose a new password.
+        link: Reset your password
+        expiry: The link expires in 15 minutes. If you did not ask for it, ignore this email.
       confirmation:
         subject: Confirm your email address
         instruction: Open this link to confirm your email address.
