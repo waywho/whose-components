@@ -1,13 +1,17 @@
-source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+# frozen_string_literal: true
 
-# Specify your gem's dependencies in whose-components.gemspec.
+source "https://rubygems.org"
+
 gemspec
 
 gem "puma"
-gem "view_component"
+gem "sqlite3"
+gem "propshaft"
 
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
-gem "byebug", group: %i[development test]
-gem "dotenv-rails", groups: %i[development test]
+group :development, :test do
+  gem "lookbook", "~> 2.3"
+  gem "factory_bot_rails"
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "rubocop-rails-omakase", require: false
+end

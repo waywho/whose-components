@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Whose
   module Components
     class Engine < ::Rails::Engine
-      isolate_namespace Whose::Components
+      engine_name "whose_components"
     end
   end
 end
