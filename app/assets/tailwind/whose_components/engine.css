@@ -1,6 +1,14 @@
 @source "../../../components";
 @source "../../../views";
 
+@font-face {
+  font-family: "League Spartan";
+  src: url("whose_components/leaguespartan-bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --whose-canvas: var(--color-stone-50);
   --whose-surface: var(--color-white);
@@ -19,6 +27,7 @@
   --whose-warning-soft: var(--color-amber-100);
   --whose-radius: 0.375rem;
   --whose-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --whose-font-display: "League Spartan", var(--whose-font-sans);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -59,6 +68,13 @@
   --color-warning-soft: var(--whose-warning-soft);
   --radius-box: var(--whose-radius);
   --font-sans: var(--whose-font-sans);
+  --font-display: var(--whose-font-display);
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--whose-font-display);
+  }
 }
 
 .pagy.series-nav {
