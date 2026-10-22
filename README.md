@@ -12,6 +12,27 @@ The template asks if the app needs sign-in. Set `WHOSE_AUTH=yes` or `WHOSE_AUTH=
 
 Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from that path instead of GitHub.
 
+## Form layouts
+`whose_form_with` takes a `layout:` option. An unknown layout raises `ArgumentError`.
+
+- `:vertical` (default): each label sits above its input, and the fields stack.
+- `:horizontal`: each label sits beside its input. On a phone the label moves above.
+- `:inline`: the fields and the submit button sit side by side in one row. Labels stay above the inputs. On a phone the row becomes a stack.
+
+```haml
+= whose_form_with model: @search, url: search_path, layout: :inline do |f|
+  = f.text_field :query
+  = f.submit "Search"
+```
+
+`whose_form_with` also takes `labels: :placeholder`. Text, email, password and other typed fields and text areas then show the label as the placeholder, and the label is visible only to screen readers. A placeholder that a field sets itself stays. Selects, file fields, checkboxes and toggles keep a visible label. The option works with all three layouts.
+
+```haml
+= whose_form_with model: @search, url: search_path, layout: :inline, labels: :placeholder do |f|
+  = f.text_field :query, label: "Search"
+  = f.submit "Search"
+```
+
 ## View helpers
 Each component has a view helper. The helper name is the component class name in snake case, without `Whose`. The helper takes the same arguments and block as the component.
 

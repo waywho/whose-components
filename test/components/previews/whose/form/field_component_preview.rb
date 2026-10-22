@@ -15,6 +15,19 @@ class Whose::Form::FieldComponentPreview < ViewComponent::Preview
     render_with_template(template: "whose/form/field_component_preview/form", locals: { account: invalid_account, layout: :horizontal })
   end
 
+  def inline
+    render_with_template(template: "whose/form/field_component_preview/inline", locals: { account: invalid_account })
+  end
+
+  def placeholder_labels
+    render_with_template(template: "whose/form/field_component_preview/form",
+                         locals: { account: invalid_account, layout: :vertical, labels: :placeholder })
+  end
+
+  def inline_placeholder_labels
+    render_with_template(template: "whose/form/field_component_preview/inline", locals: { account: invalid_account, labels: :placeholder })
+  end
+
   private
 
   def invalid_account

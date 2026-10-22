@@ -11,7 +11,7 @@ class Whose::Nav::ItemComponent < ViewComponent::Base
   def active?
     return @active unless @active.nil?
 
-    helpers.current_page?(@href) || request.path.start_with?("#{@href}/")
+    current_page?(@href) || request.path.start_with?("#{@href}/")
   end
 
   def link_style

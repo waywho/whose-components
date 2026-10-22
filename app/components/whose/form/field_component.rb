@@ -19,20 +19,27 @@ class Whose::Form::FieldComponent < ViewComponent::Base
   }.freeze
   WRAPPER_CLASSES = {
     vertical: "flex flex-col gap-1",
-    horizontal: "flex flex-col gap-1 sm:grid sm:grid-cols-[12rem_1fr] sm:gap-x-4"
+    horizontal: "flex flex-col gap-1 sm:grid sm:grid-cols-[12rem_1fr] sm:gap-x-4",
+    inline: "flex flex-col gap-1 sm:flex-1"
   }.freeze
   LABEL_CLASSES = {
     vertical: "text-sm font-medium text-fg",
-    horizontal: "text-sm font-medium text-fg sm:pt-2"
+    horizontal: "text-sm font-medium text-fg sm:pt-2",
+    inline: "text-sm font-medium text-fg"
   }.freeze
 
-  def initialize(form:, method:, label:, hint:, layout:, inline: false)
+  def initialize(form:, method:, label:, hint:, layout:, inline: false, placeholder_label: false)
     @form = form
     @method = method
     @label = label
     @hint = hint
     @layout = layout
     @inline = inline
+    @placeholder_label = placeholder_label
+  end
+
+  def placeholder_label?
+    @placeholder_label
   end
 
   def label_text
@@ -57,10 +64,10 @@ class Whose::Form::FieldComponent < ViewComponent::Base
   end
 
   def wrapper_classes
-    WRAPPER_CLASSES[@layout]
+    placeholder_label? && @layout == :horizontal ? WRAPPER_CLASSES[:vertical] : WRAPPER_CLASSES[@layout]
   end
 
   def label_classes
-    LABEL_CLASSES[@layout]
+    placeholder_label? ? "sr-only" : LABEL_CLASSES[@layout]
   end
 end

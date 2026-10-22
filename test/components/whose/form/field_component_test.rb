@@ -27,6 +27,27 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_no_selector "[data-layout=vertical]"
   end
 
+  def test_inline_layout_puts_fields_and_submit_in_one_row
+    render_form(Person.new, layout: :inline) do |form|
+      form.text_field(:name, hint: "Full name") + form.text_field(:admin) + form.submit("Save")
+    end
+
+    assert_selector "[data-form-row] [data-field][data-layout=inline] label[for=person_name]", text: "Name"
+    assert_selector "[data-form-row] [data-field] #person_name_hint", text: "Full name"
+    assert_selector "[data-form-row] button[type=submit]", text: "Save"
+    assert_selector "[data-form-row] [data-field]", count: 2
+  end
+
+  def test_other_layouts_have_no_row_wrapper
+    render_form(Person.new) { |form| form.text_field(:name) }
+
+    assert_no_selector "[data-form-row]"
+  end
+
+  def test_unknown_layout_raises
+    assert_raises(ArgumentError) { render_form(Person.new, layout: :diagonal) { |form| form.text_field(:name) } }
+  end
+
   def test_label_defaults_to_humanized_attribute
     render_form(Person.new) { |form| form.text_field(:name) }
 
@@ -94,11 +115,45 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_selector "button[type=submit]", text: "Save"
   end
 
+  def test_placeholder_labels_put_the_label_in_the_placeholder_and_hide_it
+    render_form(Person.new, labels: :placeholder) { |form| form.text_field(:name) + form.textarea(:admin) }
+
+    assert_selector "input#person_name[placeholder=Name]"
+    assert_selector "textarea#person_admin[placeholder=Admin]"
+    assert_selector "label.sr-only[for=person_name]", text: "Name", visible: :all
+    assert_no_selector "label[for=person_name]:not(.sr-only)", visible: :all
+  end
+
+  def test_placeholder_labels_keep_a_placeholder_that_the_field_sets
+    render_form(Person.new, labels: :placeholder) { |form| form.text_field(:name, placeholder: "Ann Lee") }
+
+    assert_selector "input#person_name[placeholder='Ann Lee']"
+  end
+
+  def test_placeholder_labels_keep_visible_labels_on_fields_without_a_placeholder
+    render_form(Person.new, labels: :placeholder) do |form|
+      form.select(:name, %w[Ann Bob]) + form.checkbox(:admin)
+    end
+
+    assert_selector "label[for=person_name]:not(.sr-only)", text: "Name"
+    assert_selector "label[for=person_admin]:not(.sr-only)", text: "Admin"
+  end
+
+  def test_placeholder_labels_drop_the_label_spacer_in_an_inline_form
+    render_form(Person.new, layout: :inline, labels: :placeholder) { |form| form.text_field(:name) + form.submit("Save") }
+
+    assert_no_selector "[data-form-row] span[aria-hidden=true]", visible: :all
+  end
+
+  def test_unknown_labels_option_raises
+    assert_raises(ArgumentError) { render_form(Person.new, labels: :floating) { |form| form.text_field(:name) } }
+  end
+
   private
 
-  def render_form(model, layout: :vertical, &block)
+  def render_form(model, layout: :vertical, labels: :visible, &block)
     render_in_view_context do
-      whose_form_with(model:, scope: :person, url: "/people", layout:, &block)
+      whose_form_with(model:, scope: :person, url: "/people", layout:, labels:, &block)
     end
   end
 end
