@@ -33,7 +33,7 @@ module Whose
           return unless options[:auth]
 
           migration_template "create_users.rb", "db/migrate/create_users.rb"
-          migration_template "create_sessions.rb", "db/migrate/create_sessions.rb"
+          migration_template "create_whose_sessions.rb", "db/migrate/create_whose_sessions.rb"
           template "user.rb", "app/models/user.rb"
           template "users.rb", "test/factories/users.rb"
           inject_into_class "app/controllers/application_controller.rb", "ApplicationController", "  include Whose::Authentication\n"

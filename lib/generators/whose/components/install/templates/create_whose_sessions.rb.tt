@@ -1,6 +1,6 @@
-class CreateSessions < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
+class CreateWhoseSessions < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
   def change
-    create_table :sessions do |t|
+    create_table :whose_sessions do |t|
       t.references :user, null: false, foreign_key: true
       t.string :ip_address
       t.string :user_agent

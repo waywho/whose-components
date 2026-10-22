@@ -55,7 +55,9 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
       assert_match(/t\.datetime :confirmed_at/, migration)
       assert_match(/add_index :users, :email_address, unique: true/, migration)
     end
-    assert_migration "db/migrate/create_sessions.rb" do |migration|
+    assert_migration "db/migrate/create_whose_sessions.rb" do |migration|
+      assert_match(/class CreateWhoseSessions /, migration)
+      assert_match(/create_table :whose_sessions do/, migration)
       assert_match(/t\.references :user, null: false, foreign_key: true/, migration)
       assert_match(/t\.string :ip_address/, migration)
       assert_match(/t\.string :user_agent/, migration)
@@ -71,7 +73,7 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
     run_generator
 
     assert_no_migration "db/migrate/create_users.rb"
-    assert_no_migration "db/migrate/create_sessions.rb"
+    assert_no_migration "db/migrate/create_whose_sessions.rb"
     assert_no_file "app/models/user.rb"
     assert_no_file "test/factories/users.rb"
     assert_file "app/controllers/application_controller.rb" do |content|
