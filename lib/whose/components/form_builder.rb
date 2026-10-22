@@ -51,10 +51,15 @@ module Whose
       end
 
       def submit(value = nil, **options)
-        @template.render(Whose::ButtonComponent.new(type: "submit", **options)) { value || submit_default_value }
+        button = @template.render(Whose::ButtonComponent.new(type: "submit", **options)) { value || submit_default_value }
+        layout == :inline ? @template.tag.div(label_spacer + button, class: "flex flex-col gap-1") : button
       end
 
       private
+
+      def label_spacer
+        @template.tag.span("&nbsp;".html_safe, class: "hidden text-sm font-medium sm:block", aria: { hidden: true })
+      end
 
       def field_classes
         Whose::Form::FieldComponent::CLASSES
