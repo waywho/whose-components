@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Whose::ListRowComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   def linked
-    render(Whose::ListRowComponent.new(title: "Alice Smith", subtitle: "Admin", href: "#"))
+    list_row_component(title: "Alice Smith", subtitle: "Admin", href: "#")
   end
 
   def plain
-    render(Whose::ListRowComponent.new(title: "Bob Jones"))
+    list_row_component(title: "Bob Jones")
   end
 end

@@ -2,17 +2,18 @@
 
 class Whose::PaginationComponentPreview < ViewComponent::Preview
   include Pagy::Method
+  include Whose::ComponentHelper
 
   def first_page
-    render(Whose::PaginationComponent.new(pagy: build_pagy(page: 1)))
+    pagination_component(pagy: build_pagy(page: 1))
   end
 
   def middle_page
-    render(Whose::PaginationComponent.new(pagy: build_pagy(page: 5)))
+    pagination_component(pagy: build_pagy(page: 5))
   end
 
   def last_page
-    render(Whose::PaginationComponent.new(pagy: build_pagy(page: 10)))
+    pagination_component(pagy: build_pagy(page: 10))
   end
 
   private

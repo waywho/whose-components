@@ -1,23 +1,25 @@
 # frozen_string_literal: true
 
 class Whose::BadgeComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   def neutral
-    render(Whose::BadgeComponent.new(variant: :neutral)) { "Neutral" }
+    badge_component(variant: :neutral) { "Neutral" }
   end
 
   def accent
-    render(Whose::BadgeComponent.new(variant: :accent)) { "Accent" }
+    badge_component(variant: :accent) { "Accent" }
   end
 
   def positive
-    render(Whose::BadgeComponent.new(variant: :positive)) { "Active" }
+    badge_component(variant: :positive) { "Active" }
   end
 
   def negative
-    render(Whose::BadgeComponent.new(variant: :negative)) { "Failed" }
+    badge_component(variant: :negative) { "Failed" }
   end
 
   def warning
-    render(Whose::BadgeComponent.new(variant: :warning)) { "Pending" }
+    badge_component(variant: :warning) { "Pending" }
   end
 end
