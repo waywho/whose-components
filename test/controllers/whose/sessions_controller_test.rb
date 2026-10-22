@@ -85,8 +85,9 @@ class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "default after sign in path is slash when the app has no root route" do
     controller_class = Class.new(ActionController::Base) do
-      include Rails.application.routes.mounted_helpers
       include Whose::Authentication
+
+      def main_app = ActionDispatch::Routing::RouteSet.new.url_helpers
     end
 
     assert_equal "/", controller_class.new.send(:after_sign_in_path)

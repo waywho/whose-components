@@ -7,14 +7,14 @@ gemspec
 gem "puma"
 gem "sqlite3"
 gem "propshaft"
+gem "lookbook", "~> 2.3"
+gem "pagy", "~> 43.0"
 
 group :development, :test do
-  gem "lookbook", "~> 2.3"
   gem "factory_bot_rails"
   gem "capybara"
   gem "selenium-webdriver"
   gem "rubocop-rails-omakase", require: false
-  gem "pagy", "~> 43.0"
 end
 
 group :development do
