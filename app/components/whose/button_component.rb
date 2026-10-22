@@ -2,7 +2,8 @@
 
 class Whose::ButtonComponent < ViewComponent::Base
   BASE_CLASSES = "inline-flex items-center justify-center gap-2 rounded-box font-sans font-medium " \
-                 "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                 "cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent " \
+                 "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
   VARIANT_CLASSES = {
     primary: "bg-accent text-on-accent hover:opacity-90",
     secondary: "bg-surface text-fg border border-border hover:bg-canvas",
@@ -14,7 +15,7 @@ class Whose::ButtonComponent < ViewComponent::Base
     md: "px-4 py-2 text-base"
   }.freeze
 
-  def initialize(variant: :primary, size: :md, href: nil, type: "button", **html_attributes)
+  def initialize(variant: :primary, size: :md, href: nil, type: "button", disabled: false, **html_attributes)
     raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(variant)
     raise ArgumentError, "Unknown size: #{size.inspect}." unless SIZE_CLASSES.key?(size)
 
@@ -22,6 +23,7 @@ class Whose::ButtonComponent < ViewComponent::Base
     @size = size
     @href = href
     @type = type
+    @disabled = disabled
     @html_attributes = html_attributes
   end
 

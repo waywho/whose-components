@@ -24,4 +24,12 @@ class Whose::ButtonComponentPreview < ViewComponent::Preview
   def link
     render(Whose::ButtonComponent.new(href: "/lookbook")) { "Link" }
   end
+
+  def disabled
+    render(Whose::ButtonComponent.new(disabled: true)) { "Disabled" }
+  end
+
+  def disabled_link
+    render(Whose::ButtonComponent.new(href: "/lookbook", disabled: true)) { "Disabled link" }
+  end
 end
