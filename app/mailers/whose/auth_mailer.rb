@@ -5,4 +5,9 @@ class Whose::AuthMailer < ::ApplicationMailer
     @token = user.generate_token_for(:email_confirmation)
     mail to: user.email_address
   end
+
+  def password_reset(user)
+    @token = user.password_reset_token
+    mail to: user.email_address
+  end
 end
