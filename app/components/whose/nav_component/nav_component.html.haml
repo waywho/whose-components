@@ -1,4 +1,4 @@
-%nav{ class: style[:root], aria: { label: t("whose.nav.main") } }
+%nav{ class: style[:root], aria: { label: t(".main") } }
   - if brand? && menu?
     .shrink-0.font-semibold{ data: { slot: "brand" } }= brand
   %ul{ class: style[:list] }
@@ -7,9 +7,9 @@
   - if actions? && menu?
     %div{ class: style[:actions], data: { slot: "actions" } }= actions
   - if menu?
-    = render Whose::OffcanvasComponent.new(title: t("whose.nav.menu")) do |offcanvas|
+    = render Whose::OffcanvasComponent.new(title: t(".menu")) do |offcanvas|
       - offcanvas.with_trigger do
-        %button.cursor-pointer.rounded-box.p-2.hover:bg-accent-soft.focus-visible:outline-2.focus-visible:outline-offset-2.focus-visible:outline-accent.md:hidden{ type: "button", aria: { label: t("whose.nav.open_menu") } }
+        %button.cursor-pointer.rounded-box.p-2.hover:bg-accent-soft.focus-visible:outline-2.focus-visible:outline-offset-2.focus-visible:outline-accent.md:hidden{ type: "button", aria: { label: t(".open_menu") } }
           %svg.size-5{ xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", stroke_width: "2", aria: { hidden: "true" } }
             %path{ stroke_linecap: "round", stroke_linejoin: "round", d: "M4 6h16M4 12h16M4 18h16" }
       .flex.flex-col.gap-4
