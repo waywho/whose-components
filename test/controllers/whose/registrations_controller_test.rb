@@ -11,6 +11,7 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     user = User.last
+    assert_equal "Ann Lee", user.name
     assert_not user.confirmed?
     assert_enqueued_email_with Whose::AuthMailer, :confirmation, args: [ user ]
     assert_redirected_to new_session_path
@@ -52,15 +53,29 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_no_enqueued_emails
   end
 
-  test "sign up params override applies" do
-    sign_up(name: "Ann")
+  test "sign up without a first name is unprocessable" do
+    assert_no_difference("User.count") { sign_up(first_name: "") }
+
+    assert_response :unprocessable_content
+  end
+
+  test "sign up without a last name succeeds" do
+    assert_difference("User.count") { sign_up(last_name: "") }
 
     assert_equal "Ann", User.last.name
   end
 
+  test "sign up params override applies" do
+    sign_up(nickname: "Annie")
+
+    assert_equal "Annie", User.last.nickname
+  end
+
   private
 
-  def sign_up(email_address: "ann@example.com", password: "password123", password_confirmation: password, **extra)
-    post registration_path, params: { user: { email_address:, password:, password_confirmation:, **extra } }
+  def sign_up(email_address: "ann@example.com", password: "password123", password_confirmation: password,
+              first_name: "Ann", last_name: "Lee", **extra)
+    post registration_path,
+         params: { user: { email_address:, password:, password_confirmation:, first_name:, last_name:, **extra } }
   end
 end

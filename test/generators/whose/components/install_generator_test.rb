@@ -54,6 +54,9 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
       assert_match(/t\.string :email_address, null: false/, migration)
       assert_match(/t\.string :password_digest, null: false/, migration)
       assert_match(/t\.datetime :confirmed_at/, migration)
+      assert_match(/t\.string :first_name, null: false/, migration)
+      assert_match(/t\.string :last_name\n/, migration)
+      assert_match(/t\.string :name, null: false/, migration)
       assert_match(/add_index :users, :email_address, unique: true/, migration)
     end
     assert_migration "db/migrate/create_whose_sessions.rb" do |migration|

@@ -24,6 +24,27 @@ class Whose::AuthenticatableTest < ActiveSupport::TestCase
     assert_not build(:user, password: "short").valid?
   end
 
+  test "sets name from first and last name before save" do
+    user = create(:user, first_name: " Ann ", last_name: "Lee")
+
+    assert_equal "Ann Lee", user.reload.name
+
+    user.update!(last_name: "Kim")
+
+    assert_equal "Ann Kim", user.reload.name
+  end
+
+  test "requires a first name" do
+    assert_not build(:user, first_name: "").valid?
+  end
+
+  test "name is the first name alone when there is no last name" do
+    user = create(:user, first_name: "Ann", last_name: " ").reload
+
+    assert_equal "Ann", user.name
+    assert_nil user.last_name
+  end
+
   test "confirm sets confirmed at and ends the confirmation token" do
     user = create(:user, :unconfirmed)
     token = user.generate_token_for(:email_confirmation)

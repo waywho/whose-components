@@ -13,6 +13,6 @@ class ApplicationController < ActionController::Base
   end
 
   def sign_up_params
-    params.expect(user: %i[email_address password password_confirmation name])
+    params.expect(user: %i[first_name last_name email_address password password_confirmation nickname])
   end
 end

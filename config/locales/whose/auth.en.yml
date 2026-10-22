@@ -16,6 +16,8 @@ en:
       created: We sent you an email. Open the link in it to confirm your email address.
       new:
         title: Sign up
+        first_name: First name
+        last_name: Last name
         email_address: Email address
         password: Password
         password_confirmation: Confirm the password
