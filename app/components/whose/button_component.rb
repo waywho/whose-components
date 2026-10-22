@@ -18,7 +18,6 @@ class Whose::ButtonComponent < ViewComponent::Base
     raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(variant)
     raise ArgumentError, "Unknown size: #{size.inspect}." unless SIZE_CLASSES.key?(size)
 
-    super()
     @variant = variant
     @size = size
     @href = href
