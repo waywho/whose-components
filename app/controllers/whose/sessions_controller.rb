@@ -13,11 +13,13 @@ class Whose::SessionsController < ::ApplicationController
 
   def create
     credentials = params.permit(:email_address, :password)
-    if (user = User.authenticate_by(email_address: credentials[:email_address], password: credentials[:password]))
+    user = User.authenticate_by(email_address: credentials[:email_address], password: credentials[:password])
+    if user&.confirmed?
       start_new_session_for user
       redirect_to after_authentication_url
     else
-      flash.now[:alert] = t("whose.sessions.invalid")
+      @unconfirmed = user.present?
+      flash.now[:alert] = t(@unconfirmed ? "whose.sessions.unconfirmed" : "whose.sessions.invalid")
       render :new, status: :unprocessable_content
     end
   end
