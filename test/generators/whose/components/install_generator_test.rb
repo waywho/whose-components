@@ -6,7 +6,8 @@ require "generators/whose/components/install/install_generator"
 
 class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::TestCase
   tests Whose::Components::Generators::InstallGenerator
-  destination File.expand_path("../../../../tmp/generator", __dir__)
+  # Tests run in parallel processes, and a shared folder lets one process delete another's files.
+  def destination_root = File.expand_path("../../../../tmp/generator/#{Process.pid}", __dir__)
 
   setup do
     prepare_destination
