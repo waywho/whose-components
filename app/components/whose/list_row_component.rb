@@ -7,7 +7,6 @@ class Whose::ListRowComponent < ViewComponent::Base
   BASE_CLASSES = "flex items-center gap-3 px-4 py-3 font-sans"
 
   def initialize(title:, subtitle: nil, href: nil, **html_attributes)
-    super()
     @title = title
     @subtitle = subtitle
     @href = href
