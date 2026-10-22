@@ -1,0 +1,14 @@
+= render Whose::PageHeaderComponent.new(title: "Whose Components", subtitle: "UI components, a theme with dark mode, and email and password sign-in for Rails apps.") do |header|
+  - header.with_actions do
+    = render Whose::ButtonComponent.new(href: "/lookbook") do
+      Open Lookbook
+
+= render Whose::CardComponent.new do |card|
+  - card.with_header { "Theme" }
+  %p.text-sm.text-muted
+    The theme follows the color scheme of your system. Set your system to dark mode to see the dark colors.
+  %ul{class: "mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5"}
+    - %w[bg-canvas bg-surface bg-fg bg-muted bg-border bg-accent bg-accent-soft bg-positive bg-positive-soft bg-negative bg-negative-soft bg-warning bg-warning-soft].each do
+      %li.flex.items-center.gap-2.text-sm
+        %span.size-6.shrink-0.rounded-box.border.border-border{class: it}
+        %code= it.delete_prefix("bg-")

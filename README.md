@@ -46,6 +46,13 @@ Or install it yourself as:
 $ gem install whose-components
 ```
 
+## Docs app
+The `docs/` folder holds the docs app. It shows each component in Lookbook at `/lookbook`. The gem's tests also run against this app.
+
+```bash
+bin/dev
+```
+
 ## Contributing
 Contribution directions go here.
 

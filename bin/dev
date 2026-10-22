@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-Dir.chdir(File.expand_path("../test/dummy", __dir__)) { exec "bin/dev", *ARGV }
+Dir.chdir(File.expand_path("../docs", __dir__)) { exec "bin/dev", *ARGV }

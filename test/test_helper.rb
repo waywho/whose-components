@@ -2,9 +2,13 @@
 
 ENV["RAILS_ENV"] = "test"
 
-require_relative "../test/dummy/config/environment"
-ActiveRecord::Migrator.migrations_paths = [ File.expand_path("../test/dummy/db/migrate", __dir__) ]
+require_relative "../docs/config/environment"
+ActiveRecord::Migrator.migrations_paths = [ File.expand_path("../docs/db/migrate", __dir__) ]
 require "rails/test_help"
+require_relative "support/app_overrides"
+
+FactoryBot.definition_file_paths = [ File.expand_path("factories", __dir__) ]
+FactoryBot.find_definitions
 
 class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
