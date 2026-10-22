@@ -12,6 +12,7 @@ bin/rails test test/system             # Run the system tests
 bin/rails test test/components/whose/button_component_test.rb:12   # Run one test
 bin/rubocop -A                         # Fix style
 bin/dev                                # Start the docs app, with Lookbook at /lookbook
+bin/restart                            # Restart the running docs app server, for example after a change in lib/
 ```
 
 ## Layout
