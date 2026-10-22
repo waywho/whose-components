@@ -1,0 +1,11 @@
+.mx-auto.w-full.max-w-sm
+  = render Whose::CardComponent.new do |card|
+    - card.with_header do
+      %h1.text-lg= t(".title")
+    - card.with_footer do
+      = link_to t(".sign_in"), new_session_path, class: "text-sm text-accent-text"
+    = whose_form_with url: confirmations_path do |form|
+      .flex.flex-col.gap-4
+        = form.email_field :email_address, label: t(".email_address"), required: true, autofocus: true,
+          autocomplete: "username"
+        = form.submit t(".submit"), class: "w-full"

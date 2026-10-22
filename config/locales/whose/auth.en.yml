@@ -2,6 +2,7 @@ en:
   whose:
     sessions:
       invalid: The email address or the password is not correct.
+      unconfirmed: Confirm your email address before you sign in.
       signed_out: You signed out.
       rate_limited: Too many attempts. Try again later.
       new:
@@ -9,3 +10,32 @@ en:
         email_address: Email address
         password: Password
         submit: Sign in
+        sign_up: Create an account
+        resend: Send a new confirmation link
+    registrations:
+      created: We sent you an email. Open the link in it to confirm your email address.
+      new:
+        title: Sign up
+        email_address: Email address
+        password: Password
+        password_confirmation: Confirm the password
+        submit: Sign up
+        sign_in: Sign in
+    confirmations:
+      confirmed: Your email address is confirmed.
+      invalid: The link is not valid or it expired. Send a new link.
+      sent: If the email address has an account that is not confirmed, we sent a new link.
+      new:
+        title: Send a new confirmation link
+        email_address: Email address
+        submit: Send the link
+        sign_in: Sign in
+      show:
+        title: Confirm your email address
+        submit: Confirm email address
+    auth_mailer:
+      confirmation:
+        subject: Confirm your email address
+        instruction: Open this link to confirm your email address.
+        link: Confirm your email address
+        expiry: The link expires in 2 days. If you did not sign up, ignore this email.

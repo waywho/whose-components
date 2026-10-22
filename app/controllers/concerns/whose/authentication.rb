@@ -32,6 +32,16 @@ module Whose::Authentication
     new_session_path
   end
 
+  def after_sign_up_path
+    new_session_path
+  end
+
+  def sign_up_params
+    params.expect(user: %i[email_address password password_confirmation])
+  end
+
+  def after_sign_up(user); end
+
   def require_authentication
     resume_session || request_authentication
   end

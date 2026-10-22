@@ -28,6 +28,16 @@ class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("whose.sessions.invalid"), flash[:alert]
   end
 
+  test "unconfirmed user cannot sign in" do
+    create(:user, :unconfirmed, email_address: "bob@example.com")
+
+    assert_no_difference("Whose::Session.count") { sign_in(email_address: "bob@example.com") }
+
+    assert_response :unprocessable_content
+    assert_equal I18n.t("whose.sessions.unconfirmed"), flash[:alert]
+    assert_nil cookies[:session_id]
+  end
+
   test "sign in without a password parameter is unprocessable" do
     post session_path, params: { email_address: "ann@example.com" }
 

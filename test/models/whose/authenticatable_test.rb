@@ -24,6 +24,17 @@ class Whose::AuthenticatableTest < ActiveSupport::TestCase
     assert_not build(:user, password: "short").valid?
   end
 
+  test "confirm sets confirmed at and ends the confirmation token" do
+    user = create(:user, :unconfirmed)
+    token = user.generate_token_for(:email_confirmation)
+    assert_not user.confirmed?
+
+    user.confirm!
+
+    assert user.reload.confirmed?
+    assert_nil User.find_by_token_for(:email_confirmation, token)
+  end
+
   test "destroys its sessions" do
     user = create(:user)
     user.sessions.create!

@@ -11,4 +11,8 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path
     dashboard_path
   end
+
+  def sign_up_params
+    params.expect(user: %i[email_address password password_confirmation name])
+  end
 end
