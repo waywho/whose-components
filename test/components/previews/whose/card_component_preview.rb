@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Whose::CardComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   def default
-    render(Whose::CardComponent.new) { "Card body" }
+    card_component { "Card body" }
   end
 
   def with_header_and_footer
-    render(Whose::CardComponent.new) do |card|
+    card_component do |card|
       card.with_header { "Header" }
       card.with_footer { "Footer" }
       "Card body"
@@ -14,6 +16,6 @@ class Whose::CardComponentPreview < ViewComponent::Preview
   end
 
   def unpadded
-    render(Whose::CardComponent.new(padded: false)) { "Card body" }
+    card_component(padded: false) { "Card body" }
   end
 end

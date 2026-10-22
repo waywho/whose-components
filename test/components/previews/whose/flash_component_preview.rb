@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Whose::FlashComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   def notice_and_alert
-    render(Whose::FlashComponent.new(flash: { "notice" => "Saved.", "alert" => "Save failed. Try again." }))
+    flash_component(flash: { "notice" => "Saved.", "alert" => "Save failed. Try again." })
   end
 
   def neutral
-    render(Whose::FlashComponent.new(flash: { "info" => "A new version is ready." }))
+    flash_component(flash: { "info" => "A new version is ready." })
   end
 end

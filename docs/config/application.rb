@@ -8,7 +8,7 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Dummy
+module Docs
   class Application < Rails::Application
     config.load_defaults Rails::VERSION::STRING.to_f
 
@@ -20,6 +20,7 @@ module Dummy
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    config.view_component.previews.paths << Rails.root.join("../components/previews").to_s
+    config.view_component.previews.paths << Rails.root.join("../test/components/previews").to_s
+    config.lookbook.project_name = "Whose Components"
   end
 end

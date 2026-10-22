@@ -10,7 +10,10 @@ module Whose
         app.config.importmap.cache_sweepers << root.join("app/javascript")
       end
 
-      config.to_prepare { ActionController::Base.helper Whose::FormHelper }
+      config.to_prepare do
+        ActionController::Base.helper Whose::FormHelper
+        ActionController::Base.helper Whose::ComponentHelper
+      end
 
       initializer "whose_components.assets" do |app|
         app.config.assets.paths << root.join("app/javascript")

@@ -25,6 +25,23 @@ Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from tha
   = f.submit "Search"
 ```
 
+## View helpers
+Each component has a view helper. The helper name is the component class name in snake case, without `Whose`. The helper takes the same arguments and block as the component.
+
+- `button_component`, `link_component`, `badge_component`, `card_component`
+- `flash_component`, `page_header_component`, `list_component`, `list_row_component`
+- `modal_component`, `offcanvas_component`, `tooltip_component`
+- `nav_component`, `nav_item_component`, `pagination_component`
+
+```erb
+<%= card_component do |card| %>
+  <% card.with_header { "Title" } %>
+  Body
+<% end %>
+```
+
+`whose_form_with` wraps `form_with` and is not a component.
+
 ## Installation
 Add this line to your application's Gemfile:
 
@@ -40,6 +57,13 @@ $ bundle
 Or install it yourself as:
 ```bash
 $ gem install whose-components
+```
+
+## Docs app
+The `docs/` folder holds the docs app. It shows each component in Lookbook at `/lookbook`. The gem's tests also run against this app.
+
+```bash
+bin/dev
 ```
 
 ## Contributing
