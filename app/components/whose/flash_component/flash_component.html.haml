@@ -1,0 +1,15 @@
+%div{ class: "fixed top-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2 px-4 sm:px-0" }
+  - @messages.each do |type, message|
+    %div{ class: "flex items-start gap-3 rounded-box border p-4 font-sans text-sm shadow-lg #{style_for(type)}",
+          role: type == "alert" ? "alert" : "status",
+          data: { flash_type: type,
+                  controller: "whose-notification",
+                  whose_notification_delay_value: delay_for(type),
+                  transition_enter_active: "transition ease-out duration-300",
+                  transition_enter_from: "opacity-0",
+                  transition_enter_to: "opacity-100",
+                  transition_leave_active: "transition ease-in duration-200",
+                  transition_leave_from: "opacity-100",
+                  transition_leave_to: "opacity-0" } }
+      %p.flex-1= message
+      %button.shrink-0.cursor-pointer.rounded-box.px-1.opacity-70.hover:opacity-100{ type: "button", aria: { label: t("whose.flash.close") }, data: { action: "whose-notification#hide" } } &times;
