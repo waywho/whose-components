@@ -6,6 +6,7 @@ auth, and an app template for `rails new`.
 ## Commands
 
 ```sh
+bin/setup --skip-server                # Install gems, build the CSS, prepare the docs app database
 bin/rails test                         # Run the gem's tests, with the docs app in docs/
 bin/rails test test/system             # Run the system tests
 bin/rails test test/components/whose/button_component_test.rb:12   # Run one test

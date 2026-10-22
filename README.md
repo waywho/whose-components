@@ -46,15 +46,44 @@ Or install it yourself as:
 $ gem install whose-components
 ```
 
-## Docs app
-The `docs/` folder holds the docs app. It shows each component in Lookbook at `/lookbook`. The gem's tests also run against this app.
+## Development
+The `docs/` folder holds the docs app. It shows each component in Lookbook, and the gem's tests run against it.
 
+### What you need
+- Ruby 3.4.7, the version that CI uses.
+- Google Chrome, for the system tests.
+
+### First setup
+```bash
+git clone git@github.com:waywho/whose-components.git
+cd whose-components
+bin/setup
+```
+
+`bin/setup` installs the gems, builds the Tailwind CSS, prepares the docs app database and then starts `bin/dev`. Add `--skip-server` to stop before the server starts. Add `--reset` to empty the database and load the schema again.
+
+### Run the docs app
 ```bash
 bin/dev
 ```
 
-## Contributing
-Contribution directions go here.
+This starts the server and the Tailwind watcher on port 3000.
+
+- `http://localhost:3000` is the docs home page.
+- `http://localhost:3000/lookbook` shows each component.
+- Mail in development opens in the browser with `letter_opener`.
+
+### Run the tests
+```bash
+bin/rails test                 # The unit, component, controller and integration tests
+bin/rails test test/system     # The system tests, in headless Chrome
+bin/rubocop -A                 # Style
+```
+
+The tests read the built Tailwind CSS. `bin/setup` and `bin/dev` build it. Without `bin/dev`, run `bin/rails app:tailwindcss:build` after you change a class.
+
+### After you pull
+Run `bin/setup --skip-server`. It installs new gems, builds the CSS and runs new migrations.
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
