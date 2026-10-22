@@ -7,7 +7,7 @@ class Whose::TooltipComponentSystemTest < ApplicationSystemTestCase
     visit "/rails/view_components/whose/tooltip_component/default"
 
     button = find_button("Save")
-    button.hover
+    button.execute_script("this.focus()")
     tooltip = find("[role=tooltip]", text: "Save the draft")
 
     button_box = button.evaluate_script("this.getBoundingClientRect().toJSON()")
