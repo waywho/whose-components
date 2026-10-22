@@ -14,6 +14,7 @@ group :development, :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "rubocop-rails-omakase", require: false
+  gem "pagy", "~> 43.0"
 end
 
 group :development do

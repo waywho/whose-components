@@ -60,3 +60,45 @@
   --radius-box: var(--whose-radius);
   --font-sans: var(--whose-font-sans);
 }
+
+.pagy.series-nav {
+  display: inline-flex;
+  gap: 0.25rem;
+  font-family: var(--whose-font-sans);
+  font-size: 0.875rem;
+}
+
+.pagy.series-nav a {
+  min-width: 2.25rem;
+  padding: 0.375rem 0.75rem;
+  text-align: center;
+  color: var(--whose-fg);
+  background: var(--whose-surface);
+  border: 1px solid var(--whose-border);
+  border-radius: var(--whose-radius);
+  text-decoration: none;
+}
+
+.pagy.series-nav a[href]:hover {
+  background: var(--whose-accent-soft);
+  color: var(--whose-accent-text);
+}
+
+.pagy.series-nav a[aria-current="page"] {
+  background: var(--whose-accent);
+  border-color: var(--whose-accent);
+  color: var(--whose-on-accent);
+  font-weight: 600;
+}
+
+.pagy.series-nav a[aria-disabled="true"]:not([aria-current]) {
+  color: var(--whose-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagy.series-nav a[role="separator"] {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
