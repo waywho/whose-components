@@ -5,7 +5,7 @@ class Whose::RegistrationsController < ::ApplicationController
 
   allow_unauthenticated_access only: %i[new create]
   rate_limit to: 10, within: 3.minutes, only: :create,
-             with: -> { redirect_to new_registration_path, alert: t("whose.sessions.rate_limited") }
+             with: -> { redirect_to new_registration_path, alert: t("whose.rate_limited") }
   before_action -> { redirect_to after_sign_in_path if authenticated? }
 
   def new
@@ -17,9 +17,12 @@ class Whose::RegistrationsController < ::ApplicationController
     if @user.save
       after_sign_up(@user)
       Whose::AuthMailer.confirmation(@user).deliver_later
-      redirect_to after_sign_up_path, notice: t("whose.registrations.created")
     else
-      render :new, status: :unprocessable_content
+      @user.errors.delete(:email_address, :taken)
+      return render :new, status: :unprocessable_content if @user.errors.any?
+
+      Whose::AuthMailer.account_exists(User.find_by!(email_address: @user.email_address)).deliver_later
     end
+    redirect_to after_sign_up_path, notice: t("whose.registrations.created")
   end
 end

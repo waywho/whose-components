@@ -1,10 +1,10 @@
 en:
   whose:
+    rate_limited: Too many attempts. Try again later.
     sessions:
       invalid: The email address or the password is not correct.
       unconfirmed: Confirm your email address before you sign in.
       signed_out: You signed out.
-      rate_limited: Too many attempts. Try again later.
       new:
         title: Sign in
         email_address: Email address
@@ -51,6 +51,14 @@ en:
         password_confirmation: Confirm the new password
         submit: Change password
     auth_mailer:
+      account_exists:
+        subject: You already have an account
+        instruction: Someone tried to sign up with this email address. You already have an account with this address.
+        sign_in_instruction: Open this link to sign in.
+        sign_in: Sign in
+        reset_instruction: If you forgot your password, open this link to reset it.
+        reset: Reset your password
+        ignore: If you did not try to sign up, ignore this email.
       password_reset:
         subject: Reset your password
         instruction: Open this link to choose a new password.

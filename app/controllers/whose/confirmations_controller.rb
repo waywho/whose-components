@@ -5,7 +5,7 @@ class Whose::ConfirmationsController < ::ApplicationController
 
   allow_unauthenticated_access only: %i[new create show update]
   rate_limit to: 10, within: 3.minutes, only: :create,
-             with: -> { redirect_to new_confirmation_path, alert: t("whose.sessions.rate_limited") }
+             with: -> { redirect_to new_confirmation_path, alert: t("whose.rate_limited") }
 
   def new; end
 
