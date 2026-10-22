@@ -1,0 +1,23 @@
+!!!
+%html{ lang: "en" }
+  %head
+    %title= content_for(:title) || "<%= app_title %>"
+    %meta{ name: "viewport", content: "width=device-width,initial-scale=1" }
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    %link{ rel: "icon", href: "/icon.png", type: "image/png" }
+    %link{ rel: "icon", href: "/icon.svg", type: "image/svg+xml" }
+    %link{ rel: "apple-touch-icon", href: "/icon.png" }
+    = stylesheet_link_tag "tailwind", data: { turbo_track: "reload" }
+    = javascript_importmap_tags
+  %body.bg-canvas.text-fg.font-sans
+    = render Whose::NavComponent.new do |nav|
+      - nav.with_brand { "<%= app_title %>" }
+      - nav.with_item(label: "Home", href: "/")
+<%- if options[:auth] -%>
+      - nav.with_actions { button_to t("whose.nav.sign_out"), session_path, method: :delete }
+<%- end -%>
+    = render Whose::FlashComponent.new(flash:)
+    %main.mx-auto.max-w-5xl.px-4.py-6
+      = yield
