@@ -1,0 +1,16 @@
+.mx-auto.w-full.max-w-sm
+  = render Whose::CardComponent.new do |card|
+    - card.with_header do
+      %h1.text-lg= t(".title")
+    - card.with_footer do
+      = link_to t(".sign_in"), new_session_path, class: "text-sm text-accent-text"
+    = whose_form_with model: @user, url: registration_path do |form|
+      .flex.flex-col.gap-4
+        = form.text_field :first_name, label: t(".first_name"), required: true, autofocus: true,
+          autocomplete: "given-name"
+        = form.text_field :last_name, label: t(".last_name"), autocomplete: "family-name"
+        = form.email_field :email_address, label: t(".email_address"), required: true, autocomplete: "username"
+        = form.password_field :password, label: t(".password"), required: true, autocomplete: "new-password"
+        = form.password_field :password_confirmation, label: t(".password_confirmation"), required: true,
+          autocomplete: "new-password"
+        = form.submit t(".submit"), class: "w-full"

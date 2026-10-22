@@ -1,0 +1,14 @@
+%div{class: wrapper_classes, data: { field: true, layout: @layout }}
+  - unless @inline
+    = @form.label(@method, label_text, class: label_classes)
+  %div{class: "flex flex-col gap-1 sm:col-start-2"}
+    - if @inline
+      .flex.items-center.gap-2
+        = content
+        = @form.label(@method, label_text, class: "text-sm text-fg")
+    - else
+      = content
+    - if @hint
+      %p{id: hint_id, class: "text-sm text-muted"}= @hint
+    - if error_message
+      %p{id: error_id, class: "text-sm text-negative"}= error_message

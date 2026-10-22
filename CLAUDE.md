@@ -9,7 +9,7 @@ auth, and an app template for `rails new`.
 bin/rails test                         # Run the gem's tests, with the dummy app in test/dummy
 bin/rails test test/components/whose/button_component_test.rb:12   # Run one test
 bin/rubocop -A                         # Fix style
-cd test/dummy && bin/dev               # Start the dummy app, with Lookbook at /lookbook
+bin/dev                                # Start the dummy app, with Lookbook at /lookbook
 ```
 
 ## Layout

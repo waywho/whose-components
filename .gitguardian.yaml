@@ -1,0 +1,6 @@
+version: 2
+
+secret:
+  ignored_matches:
+    - name: Tailwind class pr-16 on the password input in Whose::Form::FieldComponent, not a password
+      match: pr-16

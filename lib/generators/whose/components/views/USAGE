@@ -1,0 +1,12 @@
+Description:
+    Copy the auth views into the app, so you can change them.
+
+Example:
+    bin/rails generate whose:components:views
+
+    This will create:
+        app/views/whose/sessions
+        app/views/whose/registrations
+        app/views/whose/confirmations
+        app/views/whose/passwords
+        app/views/whose/auth_mailer

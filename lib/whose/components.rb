@@ -11,3 +11,5 @@ require "bcrypt"
 
 require "whose/components/version"
 require "whose/components/engine"
+require "whose/components/form_builder"
+require "whose/components/routes"

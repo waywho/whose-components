@@ -15,3 +15,7 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "rubocop-rails-omakase", require: false
 end
+
+group :development do
+  gem "letter_opener"
+end

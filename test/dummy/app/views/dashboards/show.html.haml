@@ -1,0 +1,5 @@
+.flex.w-full.items-center.justify-between
+  %h1.text-lg= current_user.email_address
+  = form_with url: session_path, method: :delete do
+    = render Whose::ButtonComponent.new(variant: :secondary, type: "submit") do
+      Sign out

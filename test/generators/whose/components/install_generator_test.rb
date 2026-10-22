@@ -16,6 +16,14 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
       import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
       eagerLoadControllersFrom("controllers", application)
     JS
+    write_destination_file "app/controllers/application_controller.rb", <<~RUBY
+      class ApplicationController < ActionController::Base
+      end
+    RUBY
+    write_destination_file "config/routes.rb", <<~RUBY
+      Rails.application.routes.draw do
+      end
+    RUBY
   end
 
   test "adds engine css import" do
@@ -36,6 +44,49 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
 
     assert_equal 1, File.read(File.join(destination_root, "app/assets/tailwind/application.css")).scan("whose_components.css").size
     assert_equal 1, File.read(File.join(destination_root, "app/javascript/controllers/index.js")).scan("whose/controllers").size
+  end
+
+  test "auth option adds migrations model routes and include" do
+    run_generator %w[--auth]
+
+    assert_migration "db/migrate/create_users.rb" do |migration|
+      assert_match(/\A# frozen_string_literal: true\n/, migration)
+      assert_match(/t\.string :email_address, null: false/, migration)
+      assert_match(/t\.string :password_digest, null: false/, migration)
+      assert_match(/t\.datetime :confirmed_at/, migration)
+      assert_match(/t\.string :first_name, null: false/, migration)
+      assert_match(/t\.string :last_name\n/, migration)
+      assert_match(/t\.string :name, null: false/, migration)
+      assert_match(/add_index :users, :email_address, unique: true/, migration)
+    end
+    assert_migration "db/migrate/create_whose_sessions.rb" do |migration|
+      assert_match(/\A# frozen_string_literal: true\n/, migration)
+      assert_match(/class CreateWhoseSessions /, migration)
+      assert_match(/create_table :whose_sessions do/, migration)
+      assert_match(/t\.references :user, null: false, foreign_key: true/, migration)
+      assert_match(/t\.string :ip_address/, migration)
+      assert_match(/t\.string :user_agent/, migration)
+      assert_match(/t\.timestamps/, migration)
+    end
+    assert_file "app/models/user.rb", /include Whose::Authenticatable/
+    assert_file "app/controllers/application_controller.rb", /class ApplicationController < ActionController::Base\n  include Whose::Authentication\n/
+    assert_file "config/routes.rb", /\n  whose_authentication\n/
+    assert_file "test/factories/users.rb", /factory :user do/
+  end
+
+  test "without auth option adds none" do
+    run_generator
+
+    assert_no_migration "db/migrate/create_users.rb"
+    assert_no_migration "db/migrate/create_whose_sessions.rb"
+    assert_no_file "app/models/user.rb"
+    assert_no_file "test/factories/users.rb"
+    assert_file "app/controllers/application_controller.rb" do |content|
+      assert_no_match(/Whose::Authentication/, content)
+    end
+    assert_file "config/routes.rb" do |content|
+      assert_no_match(/whose_authentication/, content)
+    end
   end
 
   private
