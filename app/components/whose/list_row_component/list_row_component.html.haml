@@ -1,0 +1,12 @@
+%li{attributes}
+  - if leading?
+    %div.shrink-0{ data: { slot: "leading" } }= leading
+  %div.min-w-0.flex-1
+    - if @href
+      = link_to @title, @href, class: "block truncate text-sm font-medium text-fg hover:text-accent-text"
+    - else
+      %p.truncate.text-sm.font-medium.text-fg= @title
+    - if @subtitle
+      %p.truncate.text-sm.text-muted= @subtitle
+  - if trailing?
+    %div.shrink-0.text-sm.text-muted{ data: { slot: "trailing" } }= trailing

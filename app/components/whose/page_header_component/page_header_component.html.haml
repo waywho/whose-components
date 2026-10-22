@@ -1,0 +1,7 @@
+%header.flex.w-full.flex-wrap.items-center.justify-between.gap-4.font-sans
+  %div
+    %h1.text-2xl.font-semibold.text-fg= @title
+    - if @subtitle
+      %p.mt-1.text-sm.text-muted= @subtitle
+  - if actions?
+    %div.flex.items-center.gap-2{ data: { slot: "actions" } }= actions

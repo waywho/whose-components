@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Whose::FlashComponentTest < ViewComponent::TestCase
+  def test_flash_renders_nothing_when_empty
+    refute Whose::FlashComponent.new(flash: {}).render?
+  end
+
+  def test_flash_escapes_message
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "<b>x</b>" }))
+
+    assert_selector "[data-flash-type=notice]", text: "<b>x</b>"
+    assert_no_selector "[data-flash-type=notice] b"
+  end
+
+  def test_flash_maps_types
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "Saved.", "alert" => "Failed.", "other" => "Note." }))
+
+    assert_selector "[data-flash-type=notice]", text: "Saved."
+    assert_selector "[data-flash-type=alert]", text: "Failed."
+    assert_selector "[data-flash-type=other]", text: "Note."
+  end
+
+  def test_alert_never_hides_by_itself_and_notice_hides_after_5000_ms
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "Saved.", "alert" => "Failed." }))
+
+    assert_selector "[data-flash-type=notice][data-whose-notification-delay-value='5000']"
+    assert_selector "[data-flash-type=alert][data-whose-notification-delay-value='0']"
+  end
+
+  def test_every_message_has_a_close_button
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "Saved." }))
+
+    assert_selector "[data-flash-type=notice] button[aria-label=Close][data-action~='whose-notification#hide']"
+  end
+end
