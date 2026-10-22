@@ -7,7 +7,6 @@ class Whose::CardComponent < ViewComponent::Base
   BASE_CLASSES = "rounded-box border border-border bg-surface font-sans text-fg"
 
   def initialize(padded: true, **html_attributes)
-    super()
     @padded = padded
     @html_attributes = html_attributes
   end
