@@ -27,7 +27,6 @@ class Whose::Form::FieldComponent < ViewComponent::Base
   }.freeze
 
   def initialize(form:, method:, label:, hint:, layout:, inline: false)
-    super()
     @form = form
     @method = method
     @label = label
