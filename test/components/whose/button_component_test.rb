@@ -40,6 +40,31 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
     assert_selector "button.bg-transparent", text: "Cancel"
   end
 
+  def test_disabled_button_has_disabled_attribute
+    render_inline(Whose::ButtonComponent.new(disabled: true)) { "Save" }
+
+    assert_selector "button[disabled]", text: "Save"
+  end
+
+  def test_enabled_button_has_no_disabled_attribute
+    render_inline(Whose::ButtonComponent.new) { "Save" }
+
+    assert_no_selector "button[disabled]"
+  end
+
+  def test_disabled_link_has_no_href_and_is_aria_disabled
+    render_inline(Whose::ButtonComponent.new(href: "/x", disabled: true)) { "Go" }
+
+    assert_selector "a[aria-disabled=true]", text: "Go"
+    assert_no_selector "a[href]"
+  end
+
+  def test_enabled_link_is_not_aria_disabled
+    render_inline(Whose::ButtonComponent.new(href: "/x")) { "Go" }
+
+    assert_no_selector "a[aria-disabled]"
+  end
+
   def test_button_rejects_unknown_variant
     assert_raises(ArgumentError) { Whose::ButtonComponent.new(variant: :huge) }
   end
