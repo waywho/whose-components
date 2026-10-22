@@ -96,6 +96,9 @@ Before you change code, run only a new test.
 - Do not assign local variables at the top of a partial. Move derived values to
   a helper, a presenter or the caller.
 - Never call `render` from a helper to choose a partial. Branch in the view.
+- A component's own text goes in a sidecar locale file next to the component,
+  for example `app/components/nav_component/nav_component.en.yml`. Read it with
+  `t(".key")`. Text that is not part of a component goes in `config/locales/`.
 
 ## Ruby style
 
