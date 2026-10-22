@@ -2,7 +2,10 @@
 
 class DashboardsController < ApplicationController
   def show
-    head :ok
+    render inline: <<~ERB, layout: "application"
+      <h1><%= current_user.email_address %></h1>
+      <%= button_to "Sign out", session_path, method: :delete %>
+    ERB
   end
 end
 

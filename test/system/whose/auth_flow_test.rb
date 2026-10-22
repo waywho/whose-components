@@ -15,6 +15,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Confirm the password", with: "password123"
     click_button "Sign up"
 
+    assert_current_path new_session_path
     assert_text I18n.t("whose.registrations.created")
     perform_enqueued_jobs
     visit mail_link
