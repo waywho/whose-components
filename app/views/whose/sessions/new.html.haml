@@ -12,4 +12,4 @@
           required: true, autofocus: true, autocomplete: "username"
         = form.password_field :password, label: t(".password"), required: true, autocomplete: "current-password"
         = link_to t(".forgot_password"), new_password_path, class: "text-sm text-accent-text"
-        = form.submit t(".submit"), class: "w-full"
+        = form.submit t(".submit"), full: true
