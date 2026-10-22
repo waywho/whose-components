@@ -1,0 +1,6 @@
+%div{attributes}
+  - if header?
+    %div.border-b.border-border.px-4.py-3.font-medium{data: {card_header: true}}= header
+  %div{class: body_classes}= content
+  - if footer?
+    %div.border-t.border-border.px-4.py-3{data: {card_footer: true}}= footer

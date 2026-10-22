@@ -1,0 +1,6 @@
+- if @href && @disabled
+  %a{attributes, "aria-disabled": "true"}= content
+- elsif @href
+  %a{attributes, href: @href}= content
+- else
+  %button{attributes, type: @type, disabled: @disabled}= content
