@@ -13,8 +13,8 @@ class Whose::ButtonComponentPreview < ViewComponent::Preview
     render(Whose::ButtonComponent.new(variant: :danger)) { "Delete" }
   end
 
-  def ghost
-    render(Whose::ButtonComponent.new(variant: :ghost)) { "Ghost" }
+  def invisible
+    render(Whose::ButtonComponent.new(variant: :invisible)) { "Invisible" }
   end
 
   def small

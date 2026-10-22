@@ -7,7 +7,7 @@ class Whose::ButtonComponent < ViewComponent::Base
     primary: "bg-accent text-on-accent hover:opacity-90",
     secondary: "bg-surface text-fg border border-border hover:bg-canvas",
     danger: "bg-negative text-surface hover:opacity-90",
-    ghost: "bg-transparent text-fg hover:bg-accent-soft hover:text-accent-text"
+    invisible: "bg-transparent text-fg hover:bg-accent-soft hover:text-accent-text"
   }.freeze
   SIZE_CLASSES = {
     sm: "px-3 py-1.5 text-sm",

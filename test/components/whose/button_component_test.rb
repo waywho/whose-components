@@ -34,6 +34,12 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
     assert_selector "button.w-full.bg-accent"
   end
 
+  def test_invisible_button_has_no_background
+    render_inline(Whose::ButtonComponent.new(variant: :invisible)) { "Cancel" }
+
+    assert_selector "button.bg-transparent", text: "Cancel"
+  end
+
   def test_button_rejects_unknown_variant
     assert_raises(ArgumentError) { Whose::ButtonComponent.new(variant: :huge) }
   end
