@@ -1,5 +1,5 @@
 .w-full.max-w-2xl.p-4
-  = whose_form_with model: account, scope: :account, url: "#", layout: layout do |f|
+  = whose_form_with model: account, scope: :account, url: "#", layout: layout, labels: local_assigns.fetch(:labels, :visible) do |f|
     .flex.flex-col.gap-4
       = f.text_field :name, hint: "Use your full name."
       = f.email_field :email

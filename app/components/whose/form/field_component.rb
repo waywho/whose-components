@@ -28,13 +28,18 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     inline: "text-sm font-medium text-fg"
   }.freeze
 
-  def initialize(form:, method:, label:, hint:, layout:, inline: false)
+  def initialize(form:, method:, label:, hint:, layout:, inline: false, placeholder_label: false)
     @form = form
     @method = method
     @label = label
     @hint = hint
     @layout = layout
     @inline = inline
+    @placeholder_label = placeholder_label
+  end
+
+  def placeholder_label?
+    @placeholder_label
   end
 
   def label_text
@@ -59,10 +64,10 @@ class Whose::Form::FieldComponent < ViewComponent::Base
   end
 
   def wrapper_classes
-    WRAPPER_CLASSES[@layout]
+    placeholder_label? && @layout == :horizontal ? WRAPPER_CLASSES[:vertical] : WRAPPER_CLASSES[@layout]
   end
 
   def label_classes
-    LABEL_CLASSES[@layout]
+    placeholder_label? ? "sr-only" : LABEL_CLASSES[@layout]
   end
 end
