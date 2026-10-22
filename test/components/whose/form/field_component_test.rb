@@ -27,6 +27,27 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_no_selector "[data-layout=vertical]"
   end
 
+  def test_inline_layout_puts_fields_and_submit_in_one_row
+    render_form(Person.new, layout: :inline) do |form|
+      form.text_field(:name, hint: "Full name") + form.text_field(:admin) + form.submit("Save")
+    end
+
+    assert_selector "[data-form-row] [data-field][data-layout=inline] label[for=person_name]", text: "Name"
+    assert_selector "[data-form-row] [data-field] #person_name_hint", text: "Full name"
+    assert_selector "[data-form-row] button[type=submit]", text: "Save"
+    assert_selector "[data-form-row] [data-field]", count: 2
+  end
+
+  def test_other_layouts_have_no_row_wrapper
+    render_form(Person.new) { |form| form.text_field(:name) }
+
+    assert_no_selector "[data-form-row]"
+  end
+
+  def test_unknown_layout_raises
+    assert_raises(ArgumentError) { render_form(Person.new, layout: :diagonal) { |form| form.text_field(:name) } }
+  end
+
   def test_label_defaults_to_humanized_attribute
     render_form(Person.new) { |form| form.text_field(:name) }
 

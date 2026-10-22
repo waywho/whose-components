@@ -15,6 +15,10 @@ class Whose::Form::FieldComponentPreview < ViewComponent::Preview
     render_with_template(template: "whose/form/field_component_preview/form", locals: { account: invalid_account, layout: :horizontal })
   end
 
+  def inline
+    render_with_template(template: "whose/form/field_component_preview/inline", locals: { account: invalid_account })
+  end
+
   private
 
   def invalid_account

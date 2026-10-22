@@ -1,0 +1,5 @@
+.w-full.max-w-3xl.p-4
+  = whose_form_with model: account, scope: :account, url: "#", layout: :inline do |f|
+    = f.text_field :name, hint: "Use your full name."
+    = f.email_field :email
+    = f.submit "Save"
