@@ -34,6 +34,12 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
     assert_selector "button.w-full.bg-accent"
   end
 
+  def test_secondary_button_has_a_subtle_background
+    render_inline(Whose::ButtonComponent.new(variant: :secondary)) { "Back" }
+
+    assert_selector "button.bg-subtle", text: "Back"
+  end
+
   def test_invisible_button_has_no_background
     render_inline(Whose::ButtonComponent.new(variant: :invisible)) { "Cancel" }
 

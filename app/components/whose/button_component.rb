@@ -6,7 +6,7 @@ class Whose::ButtonComponent < ViewComponent::Base
                  "disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50"
   VARIANT_CLASSES = {
     primary: "bg-accent text-on-accent hover:opacity-90",
-    secondary: "bg-surface text-fg border border-border hover:bg-canvas",
+    secondary: "bg-subtle text-fg border border-border hover:bg-border",
     danger: "bg-negative text-surface hover:opacity-90",
     invisible: "bg-transparent text-fg hover:bg-accent-soft hover:text-accent-text"
   }.freeze
