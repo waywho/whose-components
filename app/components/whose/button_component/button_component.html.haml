@@ -1,0 +1,4 @@
+- if @href
+  %a{attributes, href: @href}= content
+- else
+  %button{attributes, type: @type}= content
