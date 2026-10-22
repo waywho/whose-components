@@ -29,6 +29,11 @@ module Whose
           append_to_file "app/javascript/controllers/index.js", "#{STIMULUS_REGISTRATION}\n"
         end
 
+        def write_layout
+          remove_file "app/views/layouts/application.html.erb"
+          template "application.html.haml", "app/views/layouts/application.html.haml"
+        end
+
         def add_authentication
           return unless options[:auth]
 
@@ -38,6 +43,12 @@ module Whose
           template "users.rb", "test/factories/users.rb"
           inject_into_class "app/controllers/application_controller.rb", "ApplicationController", "  include Whose::Authentication\n"
           route "whose_authentication"
+        end
+
+        private
+
+        def app_title
+          Rails.application.class.module_parent_name.titleize
         end
       end
     end

@@ -39,6 +39,41 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
     assert_file "app/javascript/controllers/index.js", /eagerLoadControllersFrom\("whose\/controllers", application\)/
   end
 
+  test "writes haml layout and removes erb" do
+    write_destination_file "app/views/layouts/application.html.erb", "<html></html>"
+
+    run_generator
+
+    assert_no_file "app/views/layouts/application.html.erb"
+    assert_file "app/views/layouts/application.html.haml" do |layout|
+      assert_match(/stylesheet_link_tag "tailwind"/, layout)
+      assert_no_match(/stylesheet_link_tag :app/, layout)
+      assert_match(/javascript_importmap_tags/, layout)
+      assert_match(/csrf_meta_tags/, layout)
+      assert_match(/csp_meta_tag/, layout)
+      assert_match(/viewport/, layout)
+      assert_match(/%body\.bg-canvas\.text-fg\.font-sans/, layout)
+      assert_match(/Whose::NavComponent/, layout)
+      assert_no_match(/root_path/, layout)
+      assert_match(/href: "\/"/, layout)
+      assert_match(/%html\{ lang: "en" \}/, layout)
+      assert_match(/Whose::FlashComponent/, layout)
+      assert_match(/%main/, layout)
+      assert_match(%r{rel: "icon", href: "/icon.png"}, layout)
+      assert_match(%r{rel: "icon", href: "/icon.svg"}, layout)
+      assert_match(%r{rel: "apple-touch-icon", href: "/icon.png"}, layout)
+      assert_no_match(/sign_out/, layout)
+    end
+  end
+
+  test "layout has a sign out button with auth" do
+    run_generator %w[--auth]
+
+    assert_file "app/views/layouts/application.html.haml" do |layout|
+      assert_match(/nav\.with_actions \{ button_to t\("whose\.nav\.sign_out"\), session_path, method: :delete \}/, layout)
+    end
+  end
+
   test "is idempotent" do
     2.times { run_generator }
 
