@@ -1,0 +1,10 @@
+.mx-auto.w-full.max-w-sm
+  = render Whose::CardComponent.new do |card|
+    - card.with_header do
+      %h1.text-lg= t(".title")
+    = whose_form_with url: session_path do |form|
+      .flex.flex-col.gap-4
+        = form.email_field :email_address, label: t(".email_address"), value: params[:email_address],
+          required: true, autofocus: true, autocomplete: "username"
+        = form.password_field :password, label: t(".password"), required: true, autocomplete: "current-password"
+        = form.submit t(".submit"), class: "w-full"
