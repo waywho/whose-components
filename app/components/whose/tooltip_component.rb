@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# ponytail: no repositioning at the screen edge. Add a Stimulus controller when a tooltip gets clipped.
 # The gap uses margin, so a pointer that moves onto the tooltip hides it.
 class Whose::TooltipComponent < ViewComponent::Base
   PLACEMENTS = {
