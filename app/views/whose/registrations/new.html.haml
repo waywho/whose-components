@@ -3,7 +3,7 @@
     - card.with_header do
       %h1.text-lg= t(".title")
     - card.with_footer do
-      = link_to t(".sign_in"), new_session_path, class: "text-sm text-accent-text"
+      = render(Whose::LinkComponent.new(href: new_session_path, class: "text-sm")) { t(".sign_in") }
     = whose_form_with model: @user, url: registration_path do |form|
       .flex.flex-col.gap-4
         = form.text_field :first_name, label: t(".first_name"), required: true, autofocus: true,
