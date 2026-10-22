@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Whose::NavComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   PAGES = %i[horizontal vertical bottom].freeze
 
   def horizontal
@@ -18,7 +20,7 @@ class Whose::NavComponentPreview < ViewComponent::Preview
   private
 
   def render_nav(orientation)
-    render(Whose::NavComponent.new(orientation:)) do |nav|
+    nav_component(orientation:) do |nav|
       nav.with_brand { "Acme" }
       nav.with_actions { "Sign out" }
       PAGES.each do |page|

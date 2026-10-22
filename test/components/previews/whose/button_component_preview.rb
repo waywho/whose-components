@@ -1,39 +1,41 @@
 # frozen_string_literal: true
 
 class Whose::ButtonComponentPreview < ViewComponent::Preview
+  include Whose::ComponentHelper
+
   def primary
-    render(Whose::ButtonComponent.new(variant: :primary)) { "Primary" }
+    button_component(variant: :primary) { "Primary" }
   end
 
   def secondary
-    render(Whose::ButtonComponent.new(variant: :secondary)) { "Secondary" }
+    button_component(variant: :secondary) { "Secondary" }
   end
 
   def danger
-    render(Whose::ButtonComponent.new(variant: :danger)) { "Delete" }
+    button_component(variant: :danger) { "Delete" }
   end
 
   def invisible
-    render(Whose::ButtonComponent.new(variant: :invisible)) { "Invisible" }
+    button_component(variant: :invisible) { "Invisible" }
   end
 
   def full
-    render(Whose::ButtonComponent.new(full: true)) { "Full width" }
+    button_component(full: true) { "Full width" }
   end
 
   def small
-    render(Whose::ButtonComponent.new(size: :sm)) { "Small" }
+    button_component(size: :sm) { "Small" }
   end
 
   def link
-    render(Whose::ButtonComponent.new(href: "/lookbook")) { "Link" }
+    button_component(href: "/lookbook") { "Link" }
   end
 
   def disabled
-    render(Whose::ButtonComponent.new(disabled: true)) { "Disabled" }
+    button_component(disabled: true) { "Disabled" }
   end
 
   def disabled_link
-    render(Whose::ButtonComponent.new(href: "/lookbook", disabled: true)) { "Disabled link" }
+    button_component(href: "/lookbook", disabled: true) { "Disabled link" }
   end
 end
