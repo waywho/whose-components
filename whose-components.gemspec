@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name        = "whose-components"
   spec.version     = Whose::Components::VERSION
   spec.authors     = [ "WeiHsi Hu" ]
-  spec.email       = [ "wh@simply.tv" ]
+  spec.email       = [ "walzerfan@yahoo.com" ]
   spec.homepage    = "https://github.com/waywho/whose-components"
   spec.summary     = "ViewComponents, a theme with dark mode, and email-and-password auth for Rails."
   spec.description = "A Rails engine with ViewComponents, a Tailwind theme with dark mode, Stimulus controllers, and optional email-and-password auth."
