@@ -22,6 +22,12 @@ class Whose::TooltipComponentTest < ViewComponent::TestCase
     assert_selector "span", text: "Save"
   end
 
+  def test_tooltip_passes_html_attributes_through
+    render_inline(Whose::TooltipComponent.new(text: "Help", id: "x", data: { turbo_frame: "y" }, class: "extra")) { "Save" }
+
+    assert_selector "span#x.extra.group[data-turbo-frame='y']"
+  end
+
   def test_each_tooltip_has_its_own_id
     first = render_inline(Whose::TooltipComponent.new(text: "One")).css("[role=tooltip]").first[:id]
     second = render_inline(Whose::TooltipComponent.new(text: "Two")).css("[role=tooltip]").first[:id]

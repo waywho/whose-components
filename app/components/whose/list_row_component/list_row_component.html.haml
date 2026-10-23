@@ -3,7 +3,7 @@
     %div.shrink-0{ data: { slot: "leading" } }= leading
   %div.min-w-0.flex-1
     - if @href
-      = link_to @title, @href, class: "block truncate text-sm font-medium text-fg hover:text-accent-text"
+      = link_to @title, @href, class: "block truncate rounded-box text-sm font-medium text-fg hover:text-accent-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     - else
       %p.truncate.text-sm.font-medium.text-fg= @title
     - if @subtitle

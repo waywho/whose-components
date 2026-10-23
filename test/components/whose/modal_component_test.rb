@@ -52,6 +52,12 @@ class Whose::ModalComponentTest < ViewComponent::TestCase
     assert_selector "dialog[aria-labelledby='#{title_id}']", visible: :all
   end
 
+  def test_modal_passes_html_attributes_through
+    render_modal(id: "x", data: { turbo_frame: "y" }, class: "extra")
+
+    assert_selector "div#x.extra[data-controller=whose-dialog][data-turbo-frame='y']"
+  end
+
   def test_title_ids_are_unique_per_instance
     first = render_modal.css("h2").first["id"]
     second = render_modal.css("h2").first["id"]

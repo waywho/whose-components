@@ -13,4 +13,10 @@ class Whose::ListComponentTest < ViewComponent::TestCase
     assert_text "Alice"
     assert_text "Bob"
   end
+
+  def test_list_passes_html_attributes_through
+    render_inline(Whose::ListComponent.new(id: "x", data: { turbo_frame: "y" }, class: "extra"))
+
+    assert_selector "ul#x.extra.divide-y[data-turbo-frame='y']"
+  end
 end

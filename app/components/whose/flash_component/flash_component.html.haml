@@ -1,4 +1,4 @@
-%div{ class: "fixed top-4 right-4 z-50 flex w-full max-w-sm flex-col gap-2 px-4 sm:px-0" }
+%div{ attributes }
   - @messages.each do |type, message|
     %div{ class: "flex items-start gap-3 rounded-box border p-4 font-sans text-sm shadow-lg #{style_for(type)}",
           role: type == "alert" ? "alert" : "status",
@@ -12,4 +12,4 @@
                   transition_leave_from: "opacity-100",
                   transition_leave_to: "opacity-0" } }
       %p.flex-1= message
-      %button.shrink-0.cursor-pointer.rounded-box.px-1.opacity-70.hover:opacity-100{ type: "button", aria: { label: t(".close") }, data: { action: "whose-notification#hide" } } &times;
+      %button.shrink-0.cursor-pointer.rounded-box.px-1.opacity-70.hover:opacity-100.focus-visible:outline-2.focus-visible:outline-offset-2.focus-visible:outline-accent{ type: "button", aria: { label: t(".close") }, data: { action: "whose-notification#hide" } } &times;

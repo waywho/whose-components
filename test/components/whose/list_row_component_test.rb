@@ -9,6 +9,12 @@ class Whose::ListRowComponentTest < ViewComponent::TestCase
     assert_selector "a[href='/people/1']", text: "Alice"
   end
 
+  def test_list_row_link_has_a_focus_ring
+    render_inline(Whose::ListRowComponent.new(title: "Alice", href: "/people/1"))
+
+    assert_selector "a.focus-visible\\:outline-2.focus-visible\\:outline-accent"
+  end
+
   def test_list_row_does_not_link_without_href
     render_inline(Whose::ListRowComponent.new(title: "Alice", subtitle: "Admin"))
 

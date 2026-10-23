@@ -46,6 +46,12 @@ class Whose::Nav::ItemComponentTest < ViewComponent::TestCase
     assert_no_selector "a[aria-current]"
   end
 
+  def test_item_passes_html_attributes_through
+    render_inline(Whose::Nav::ItemComponent.new(label: "Home", href: "/", id: "x", data: { turbo_frame: "y" }, class: "extra"))
+
+    assert_selector "li#x.extra[data-turbo-frame='y']"
+  end
+
   def test_item_renders_icon
     render_inline(Whose::Nav::ItemComponent.new(label: "Home", href: "/", icon: "<svg data-icon></svg>".html_safe))
 

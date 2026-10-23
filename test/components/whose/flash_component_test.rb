@@ -34,4 +34,16 @@ class Whose::FlashComponentTest < ViewComponent::TestCase
 
     assert_selector "[data-flash-type=notice] button[aria-label=Close][data-action~='whose-notification#hide']"
   end
+
+  def test_close_button_has_a_focus_ring
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "Saved." }))
+
+    assert_selector "button[aria-label=Close].focus-visible\\:outline-2.focus-visible\\:outline-accent"
+  end
+
+  def test_flash_passes_html_attributes_through
+    render_inline(Whose::FlashComponent.new(flash: { "notice" => "Saved." }, id: "x", data: { turbo_permanent: true }, class: "extra"))
+
+    assert_selector "div#x.extra.fixed[data-turbo-permanent]"
+  end
 end

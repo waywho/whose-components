@@ -1,6 +1,6 @@
-%div{ data: { controller: "whose-dialog", action: "click->whose-dialog#backdropClose" } }
+%div{ attributes }
   %span.contents{ data: { action: "click->whose-dialog#open" } }= trigger
-  %dialog{ class: "m-0 h-dvh max-h-none w-80 max-w-[85vw] border-border bg-surface p-0 font-sans text-fg shadow-xl backdrop:bg-black/50 #{side_style}",
+  %dialog{ class: "m-0 h-dvh max-h-none w-80 max-w-[85vw] border-border bg-surface p-0 font-sans text-fg shadow-xl backdrop:bg-backdrop #{side_style}",
            aria: { labelledby: @title_id },
            data: { side: @side, whose_dialog_target: "dialog" } }
     .flex.h-full.flex-col.gap-4.overflow-y-auto.p-6
