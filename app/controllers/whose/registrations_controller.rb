@@ -21,7 +21,8 @@ class Whose::RegistrationsController < ::ApplicationController
       @user.errors.delete(:email_address, :taken)
       return render :new, status: :unprocessable_content if @user.errors.any?
 
-      Whose::AuthMailer.account_exists(User.find_by!(email_address: @user.email_address)).deliver_later
+      owner = User.find_by!(email_address: @user.email_address)
+      (owner.confirmed? ? Whose::AuthMailer.account_exists(owner) : Whose::AuthMailer.confirmation(owner)).deliver_later
     end
     redirect_to after_sign_up_path, notice: t("whose.registrations.created")
   end
