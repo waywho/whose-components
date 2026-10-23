@@ -8,9 +8,13 @@ def whose_template_ref(url)
 end
 
 # rails new keeps flags it does not know in ARGV and leaves them out of options.
+def whose_flag_value(args, name)
+  args.each_cons(2).find { |flag, _| flag == "--#{name}" }&.last ||
+    args.find { it.start_with?("--#{name}=") }&.delete_prefix("--#{name}=")
+end
+
 def whose_root_option(args)
-  value = args.each_cons(2).find { |flag, _| flag == "--root" }&.last ||
-          args.find { it.start_with?("--root=") }&.delete_prefix("--root=")
+  value = whose_flag_value(args, "root")
   return unless value
   raise Thor::Error, "Use --root controller#action, for example --root pages#home." unless value.match?(/\A[a-z_]+#[a-z_]+\z/)
 
@@ -19,6 +23,7 @@ end
 
 template_ref = whose_template_ref(__FILE__)
 root_page = whose_root_option(ARGV)
+gem_path = whose_flag_value(ARGV, "component-gem-path")
 
 if __FILE__.match?(%r{\Ahttps?://})
   gem_checkout = Dir.mktmpdir("whose-components-")
@@ -34,8 +39,8 @@ auth = ARGV.include?("--auth") || (!ARGV.include?("--no-auth") && yes?("Add sign
 gem "haml-rails"
 gem "view_component"
 gem "pagy", "~> 43"
-if ENV["WHOSE_GEM_PATH"]
-  gem "whose-components", path: ENV["WHOSE_GEM_PATH"]
+if gem_path
+  gem "whose-components", path: gem_path
 elsif template_ref
   gem "whose-components", github: "waywho/whose-components", ref: template_ref
 else

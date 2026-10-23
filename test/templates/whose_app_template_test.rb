@@ -43,10 +43,16 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_path_exists File.join(app_path, ".claude/skills/asd-ste100/SKILL.md")
   end
 
-  test "installs the gem from WHOSE_GEM_PATH and needs no prompt without sign-in" do
-    generate_app("--no-auth", env: { "WHOSE_GEM_PATH" => "/src/whose-components" })
+  test "installs the gem from --component-gem-path and needs no prompt without sign-in" do
+    generate_app("--no-auth", "--component-gem-path", "/src/whose-components")
 
     assert_includes app_file("Gemfile"), %(gem "whose-components", path: "/src/whose-components")
+  end
+
+  test "reads a flag value in both forms" do
+    assert_equal "/src/gem", flag_value(%w[new demo --component-gem-path /src/gem], "component-gem-path")
+    assert_equal "/src/gem", flag_value(%w[new demo --component-gem-path=/src/gem], "component-gem-path")
+    assert_nil flag_value(%w[new demo], "component-gem-path")
   end
 
   test "reads the ref from each form of template URL" do
@@ -106,15 +112,19 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   private
 
   def template_ref(url)
-    template_method(:whose_template_ref).whose_template_ref(url)
+    template_methods.whose_template_ref(url)
   end
 
   def root_option(args)
-    template_method(:whose_root_option).whose_root_option(args)
+    template_methods.whose_root_option(args)
   end
 
-  def template_method(name)
-    source = File.read(TEMPLATE)[/^def #{name}.*?^end$/m]
+  def flag_value(args, name)
+    template_methods.whose_flag_value(args, name)
+  end
+
+  def template_methods
+    source = File.read(TEMPLATE).scan(/^def .*?^end$/m).join("\n")
     Object.new.tap { it.instance_eval(source) }
   end
 
@@ -126,18 +136,14 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     File.read(File.join(app_path, path))
   end
 
-  def generate_app(*flags, env: {})
-    previous_env = ENV.to_h.slice("WHOSE_GEM_PATH")
+  def generate_app(*flags)
     previous_argv = ARGV.dup
     previous_dir = Dir.pwd
-    ENV.update(env)
     args = [ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", *flags, "-m", TEMPLATE ]
     ARGV.replace([ "new", *args ])
     capture_io { Rails::Generators::AppGenerator.start(args) }.first
   ensure
     Dir.chdir(previous_dir)
     ARGV.replace(previous_argv)
-    env.each_key { ENV.delete(it) }
-    ENV.update(previous_env)
   end
 end

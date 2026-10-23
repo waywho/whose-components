@@ -16,7 +16,7 @@ If you pass `--skip-bundle`, the template prints the commands that you must run 
 
 The template asks if the app needs sign-in. Add `--auth` or `--no-auth` to answer without the prompt.
 
-Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from that path instead of GitHub.
+Add `--component-gem-path /path/to/whose-components` to install the gem from a local checkout instead of GitHub.
 
 ## Form layouts
 `whose_form_with` takes a `layout:` option. An unknown layout raises `ArgumentError`.
