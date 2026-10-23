@@ -64,11 +64,49 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes output, "bin/rails db:create db:migrate"
   end
 
+  test "reads the root page from the --root flag" do
+    assert_equal "pages#home", root_option(%w[new demo --root pages#home])
+    assert_equal "landing#show", root_option(%w[new demo --root=landing#show])
+    assert_nil root_option(%w[new demo])
+    assert_raises(Thor::Error) { root_option(%w[new demo --root pages]) }
+  end
+
+  test "adds the root page that --root names, behind sign-in" do
+    generate_app({ "WHOSE_AUTH" => "yes" }, "--root", "landing#show")
+
+    assert_includes app_file("config/routes.rb"), %(root "landing#show")
+    assert_match(/class LandingController < ApplicationController\n  def show; end\nend/, app_file("app/controllers/landing_controller.rb"))
+    assert_path_exists File.join(app_path, "app/views/landing/show.html.haml")
+    assert_includes app_file("test/controllers/landing_controller_test.rb"), "assert_redirected_to new_session_url"
+  end
+
+  test "adds a root page that renders without sign-in" do
+    generate_app({ "WHOSE_AUTH" => "no" }, "--root=pages#home")
+
+    assert_includes app_file("config/routes.rb"), %(root "pages#home")
+    assert_includes app_file("test/controllers/pages_controller_test.rb"), "assert_response :success"
+  end
+
+  test "adds no root page without --root" do
+    generate_app("WHOSE_AUTH" => "no")
+
+    assert_not_includes app_file("config/routes.rb"), %(\n  root )
+    assert_not File.exist?(File.join(app_path, "app/controllers/pages_controller.rb"))
+  end
+
   private
 
   def template_ref(url)
-    source = File.read(TEMPLATE)[/^def whose_template_ref.*?^end$/m]
-    Object.new.tap { it.instance_eval(source) }.whose_template_ref(url)
+    template_method(:whose_template_ref).whose_template_ref(url)
+  end
+
+  def root_option(args)
+    template_method(:whose_root_option).whose_root_option(args)
+  end
+
+  def template_method(name)
+    source = File.read(TEMPLATE)[/^def #{name}.*?^end$/m]
+    Object.new.tap { it.instance_eval(source) }
   end
 
   def app_path
@@ -79,15 +117,17 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     File.read(File.join(app_path, path))
   end
 
-  def generate_app(env)
+  def generate_app(env, *flags)
     previous_env = ENV.to_h.slice("WHOSE_AUTH", "WHOSE_GEM_PATH")
+    previous_argv = ARGV.dup
     previous_dir = Dir.pwd
     ENV.update(env)
-    capture_io do
-      Rails::Generators::AppGenerator.start([ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", "-m", TEMPLATE ])
-    end.first
+    args = [ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", *flags, "-m", TEMPLATE ]
+    ARGV.replace([ "new", *args ])
+    capture_io { Rails::Generators::AppGenerator.start(args) }.first
   ensure
     Dir.chdir(previous_dir)
+    ARGV.replace(previous_argv)
     env.each_key { ENV.delete(it) }
     ENV.update(previous_env)
   end

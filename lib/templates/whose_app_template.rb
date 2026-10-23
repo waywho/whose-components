@@ -7,7 +7,18 @@ def whose_template_ref(url)
   url[%r{waywho/whose-components/(?:refs/(?:heads|tags)/)?([^/]+)/lib/templates/}, 1]
 end
 
+# rails new keeps flags it does not know in ARGV and leaves them out of options.
+def whose_root_option(args)
+  value = args.each_cons(2).find { |flag, _| flag == "--root" }&.last ||
+          args.find { it.start_with?("--root=") }&.delete_prefix("--root=")
+  return unless value
+  raise Thor::Error, "Use --root controller#action, for example --root pages#home." unless value.match?(/\A[a-z_]+#[a-z_]+\z/)
+
+  value
+end
+
 template_ref = whose_template_ref(__FILE__)
+root_page = whose_root_option(ARGV)
 
 if __FILE__.match?(%r{\Ahttps?://})
   gem_checkout = Dir.mktmpdir("whose-components-")
@@ -68,6 +79,32 @@ template "CLAUDE.md.tt", "CLAUDE.md"
 directory ".claude", ".claude"
 
 route %(mount Lookbook::Engine, at: "/lookbook" if Rails.env.development?)
+
+if root_page
+  controller, action = root_page.split("#")
+  route %(root "#{root_page}")
+  create_file "app/controllers/#{controller}_controller.rb", <<~RUBY
+    # frozen_string_literal: true
+
+    class #{controller.camelize}Controller < ApplicationController
+      def #{action}; end
+    end
+  RUBY
+  create_file "app/views/#{controller}/#{action}.html.haml", %(= page_header_component(title: "#{action.humanize}")\n)
+  create_file "test/controllers/#{controller}_controller_test.rb", <<~RUBY
+    # frozen_string_literal: true
+
+    require "test_helper"
+
+    class #{controller.camelize}ControllerTest < ActionDispatch::IntegrationTest
+      #{auth ? %(test "#{action} asks a signed-out visitor to sign in" do) : %(test "#{action} renders" do)}
+        get root_url
+
+        #{auth ? "assert_redirected_to new_session_url" : "assert_response :success"}
+      end
+    end
+  RUBY
+end
 
 after_bundle do
   if options[:skip_bundle]

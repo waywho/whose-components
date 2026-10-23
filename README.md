@@ -10,6 +10,8 @@ rails new myapp -d postgresql --css tailwind -m https://raw.githubusercontent.co
 
 The URL names a ref: a tag, a branch, or `refs/tags/<tag>` or `refs/heads/<branch>`. The gem and the template files both come from that ref. A branch name that has a slash does not work.
 
+Add `--root pages#home` to make a root page. The template writes the route, the controller, the view and a controller test. Use any `controller#action`, for example `--root landing#show`. With sign-in, the page asks a signed-out visitor to sign in.
+
 If you pass `--skip-bundle`, the template prints the commands that you must run by hand.
 
 The template asks if the app needs sign-in. Set `WHOSE_AUTH=yes` or `WHOSE_AUTH=no` to answer without the prompt.
