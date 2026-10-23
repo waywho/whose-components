@@ -67,16 +67,19 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
     end
   end
 
-  test "layout has a sign out button with auth" do
+  test "layout shows the sign out button only to signed-in users with auth" do
     run_generator %w[--auth]
 
     assert_file "app/views/layouts/application.html.haml" do |layout|
-      assert_match(/nav\.with_actions \{ button_to t\("whose\.nav\.sign_out"\), session_path, method: :delete \}/, layout)
+      assert_match(/^      - if authenticated\?\n        - nav\.with_actions \{ button_to t\("whose\.nav\.sign_out"\), session_path, method: :delete \}$/, layout)
     end
   end
 
   test "is idempotent" do
     2.times { run_generator }
+
+    assert_equal [ "application.html.haml" ], Dir.children(File.join(destination_root, "app/views/layouts"))
+    assert_equal 1, File.read(File.join(destination_root, "app/views/layouts/application.html.haml")).scan("Whose::NavComponent").size
 
     assert_equal 1, File.read(File.join(destination_root, "app/assets/tailwind/application.css")).scan("whose_components.css").size
     assert_equal 1, File.read(File.join(destination_root, "app/javascript/controllers/index.js")).scan("whose/controllers").size
