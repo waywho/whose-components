@@ -28,6 +28,17 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     assert_equal "Ann", User.find_by!(email_address: "ann@example.com").name
   end
 
+  def test_sign_up_without_first_name_shows_the_plain_error_message
+    visit new_registration_path
+    fill_in "First name", with: " "
+    fill_in "Email address", with: "ann@example.com"
+    fill_in "Password", with: "password123", exact: true
+    fill_in "Confirm the password", with: "password123"
+    click_button "Sign up"
+
+    assert_text "Enter a value."
+  end
+
   def test_wrong_password_shows_one_alert_and_right_password_signs_in
     create(:user, email_address: "ann@example.com")
 
