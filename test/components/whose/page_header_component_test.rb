@@ -13,6 +13,12 @@ class Whose::PageHeaderComponentTest < ViewComponent::TestCase
     assert_selector "[data-slot=actions]", text: "Add"
   end
 
+  def test_page_header_passes_html_attributes_through
+    render_inline(Whose::PageHeaderComponent.new(title: "People", id: "x", data: { turbo_frame: "y" }, class: "extra"))
+
+    assert_selector "header#x.extra.flex[data-turbo-frame='y']"
+  end
+
   def test_page_header_omits_empty_subtitle_and_actions
     render_inline(Whose::PageHeaderComponent.new(title: "People"))
 

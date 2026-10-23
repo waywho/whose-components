@@ -17,6 +17,12 @@ class Whose::PaginationComponentTest < ViewComponent::TestCase
     assert_selector "nav.pagy.series-nav a[aria-current=page]", text: "3"
   end
 
+  def test_passes_html_attributes_through
+    render_inline(Whose::PaginationComponent.new(pagy: build_pagy(count: 95), id: "x", data: { turbo_frame: "y" }, class: "extra"))
+
+    assert_selector "div#x.extra[data-turbo-frame='y'] nav.pagy"
+  end
+
   private
 
   def build_pagy(count:, page: 1)
