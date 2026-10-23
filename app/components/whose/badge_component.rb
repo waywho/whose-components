@@ -11,9 +11,9 @@ class Whose::BadgeComponent < ViewComponent::Base
   }.freeze
 
   def initialize(variant: :neutral, **html_attributes)
-    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(variant)
+    @variant = variant.to_sym
+    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(@variant)
 
-    @variant = variant
     @html_attributes = html_attributes
   end
 

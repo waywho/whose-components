@@ -9,7 +9,5 @@ class Whose::TooltipComponentPreview < ViewComponent::Preview
     end
   end
 
-  def placements
-    render_with_template
-  end
+  def placements; end
 end

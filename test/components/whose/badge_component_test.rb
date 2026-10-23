@@ -15,6 +15,12 @@ class Whose::BadgeComponentTest < ViewComponent::TestCase
     assert_selector "span#x.extra.rounded-box[data-turbo-frame='y']"
   end
 
+  def test_badge_accepts_string_variant
+    render_inline(Whose::BadgeComponent.new(variant: "positive")) { "Active" }
+
+    assert_selector "span.bg-positive-soft", text: "Active"
+  end
+
   def test_badge_rejects_unknown_variant
     assert_raises(ArgumentError) { Whose::BadgeComponent.new(variant: :loud) }
   end

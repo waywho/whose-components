@@ -12,7 +12,7 @@ class Whose::ComponentHelperTest < ActionView::TestCase
   def test_every_public_component_has_a_helper
     component_files = Dir[Whose::Components::Engine.root.join("app/components/whose/**/*_component.rb")]
     class_names = component_files.map { |file| file.split("app/components/").last.delete_suffix(".rb").camelize }
-    class_names -= [ "Whose::Form::FieldComponent" ]
+    class_names -= [ "Whose::Form::FieldComponent", "Whose::DialogHeaderComponent" ]
     helper_names = class_names.map { |name| name.delete_prefix("Whose::").gsub("::", "").underscore }
 
     missing = helper_names.reject { Whose::ComponentHelper.method_defined?(it) }

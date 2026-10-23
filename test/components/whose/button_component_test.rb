@@ -54,6 +54,12 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
     assert_selector "button.bg-subtle", text: "Back"
   end
 
+  def test_button_accepts_string_variant_and_size
+    render_inline(Whose::ButtonComponent.new(variant: "secondary", size: "sm")) { "Back" }
+
+    assert_selector "button.bg-subtle.text-sm", text: "Back"
+  end
+
   def test_invisible_button_has_no_background
     render_inline(Whose::ButtonComponent.new(variant: :invisible)) { "Cancel" }
 

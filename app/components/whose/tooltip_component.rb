@@ -16,8 +16,8 @@ class Whose::TooltipComponent < ViewComponent::Base
   def initialize(text:, placement: :top, **html_attributes)
     @text = text
     @html_attributes = html_attributes
-    @placement_classes = PLACEMENTS.fetch(placement) { raise ArgumentError, "Unknown placement: #{placement.inspect}" }
-    @id = "tooltip-#{SecureRandom.hex(4)}"
+    @placement_classes = PLACEMENTS.fetch(placement.to_sym) { raise ArgumentError, "Unknown placement: #{placement.inspect}" }
+    @id = "whose-tooltip-#{SecureRandom.hex(4)}"
   end
 
   def attributes

@@ -35,6 +35,12 @@ class Whose::TooltipComponentTest < ViewComponent::TestCase
     refute_equal first, second
   end
 
+  def test_tooltip_id_has_the_whose_prefix
+    render_inline(Whose::TooltipComponent.new(text: "Help")) { "Save" }
+
+    assert_match(/\Awhose-tooltip-\h+\z/, page.find("[role=tooltip]", visible: :all)[:id])
+  end
+
   def test_tooltip_shows_on_hover_and_focus_only
     render_inline(Whose::TooltipComponent.new(text: "Help")) { "Save" }
 
@@ -47,6 +53,13 @@ class Whose::TooltipComponentTest < ViewComponent::TestCase
     end
 
     assert_equal 4, classes.values.uniq.size
+  end
+
+  def test_string_placement_works_like_the_symbol
+    from_string = render_inline(Whose::TooltipComponent.new(text: "Help", placement: "bottom")).css("[role=tooltip]").first[:class]
+    from_symbol = render_inline(Whose::TooltipComponent.new(text: "Help", placement: :bottom)).css("[role=tooltip]").first[:class]
+
+    assert_equal from_symbol, from_string
   end
 
   def test_unknown_placement_raises
