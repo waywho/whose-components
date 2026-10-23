@@ -109,6 +109,12 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_selector "button[data-action='whose-password-visibility#toggle'] span", text: "Hide", visible: :all
   end
 
+  def test_password_toggle_button_has_focus_ring
+    render_form(Person.new) { it.password_field(:name) }
+
+    assert_selector "button[data-action='whose-password-visibility#toggle'].focus-visible\\:outline-2.focus-visible\\:outline-offset-2.focus-visible\\:outline-accent"
+  end
+
   def test_submit_renders_submit_button
     render_form(Person.new) { it.submit("Save") }
 
