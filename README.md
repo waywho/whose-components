@@ -15,6 +15,24 @@ rails new myapp -d postgresql --css tailwind --auth --root pages#home \
   -m https://raw.githubusercontent.com/waywho/whose-components/v0.1.0/lib/templates/whose_app_template.rb
 ```
 
+### Short command with ~/.railsrc
+`rails new` reads default flags from `~/.railsrc`. To put the database, the CSS and the template URL there, run this once from a checkout of this repo:
+
+```bash
+bin/install-railsrc
+```
+
+Then make a new app with only the flags of the template:
+
+```bash
+rails new myapp --auth --root pages#home
+```
+
+- The URL in `~/.railsrc` names the version of your checkout. After a new release, run `git pull` and `bin/install-railsrc` again.
+- If `~/.railsrc` has other settings, the script stops. Add `--force` to replace the file.
+- Keep `--auth`, `--no-auth`, `--root` and `--component-gem-path` on the command line. The template does not see these flags in `~/.railsrc`.
+- To make an app without these defaults, add `--no-rc` to `rails new`.
+
 The URL names a ref: a tag, a branch, or `refs/tags/<tag>` or `refs/heads/<branch>`. The gem and the template files both come from that ref. A branch name that has a slash does not work.
 
 Add `--root pages#home` to make a root page. The template writes the route, the controller, the view and a controller test. Use any `controller#action`, for example `--root landing#show`. With sign-in, the page asks a signed-out visitor to sign in.

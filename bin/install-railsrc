@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../lib/whose/components/version"
+
+TEMPLATE_URL_START = "https://raw.githubusercontent.com/waywho/whose-components/"
+template_url = "#{TEMPLATE_URL_START}v#{Whose::Components::VERSION}/lib/templates/whose_app_template.rb"
+railsrc = File.join(Dir.home, ".railsrc")
+
+if File.exist?(railsrc) && !File.read(railsrc).include?(TEMPLATE_URL_START) && !ARGV.include?("--force")
+  abort "#{railsrc} has other settings. Run bin/install-railsrc --force to replace it."
+end
+
+File.write(railsrc, "-d postgresql\n--css tailwind\n-m #{template_url}\n")
+puts "Wrote #{railsrc}. Run rails new myapp --auth --root pages#home to make an app."
