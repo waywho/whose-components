@@ -3,6 +3,11 @@
 A Rails engine: UI components, a theme with dark mode, email-and-password
 auth, and an app template for `rails new`.
 
+The gem has one job: it gives UI components that an app assembles into its
+pages. The app owns its data and its server side: models, controllers, jobs
+and streaming. The auth is the one exception. No new feature adds models,
+controllers, jobs or routes to the gem.
+
 ## Commands
 
 ```sh
