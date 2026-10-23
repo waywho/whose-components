@@ -11,7 +11,5 @@ class Whose::LinkComponentPreview < ViewComponent::Preview
     link_component(href: "/lookbook", variant: :muted) { "Muted link" }
   end
 
-  def in_paragraph
-    render_with_template
-  end
+  def in_paragraph; end
 end
