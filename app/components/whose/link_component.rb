@@ -9,10 +9,10 @@ class Whose::LinkComponent < ViewComponent::Base
   }.freeze
 
   def initialize(href:, variant: :accent, **html_attributes)
-    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(variant)
+    @variant = variant.to_sym
+    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(@variant)
 
     @href = href
-    @variant = variant
     @html_attributes = html_attributes
   end
 

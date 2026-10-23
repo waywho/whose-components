@@ -16,11 +16,11 @@ class Whose::ButtonComponent < ViewComponent::Base
   }.freeze
 
   def initialize(variant: :primary, size: :md, href: nil, type: "button", disabled: false, full: false, **html_attributes)
-    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(variant)
-    raise ArgumentError, "Unknown size: #{size.inspect}." unless SIZE_CLASSES.key?(size)
+    @variant = variant.to_sym
+    @size = size.to_sym
+    raise ArgumentError, "Unknown variant: #{variant.inspect}." unless VARIANT_CLASSES.key?(@variant)
+    raise ArgumentError, "Unknown size: #{size.inspect}." unless SIZE_CLASSES.key?(@size)
 
-    @variant = variant
-    @size = size
     @href = href
     @type = type
     @disabled = disabled

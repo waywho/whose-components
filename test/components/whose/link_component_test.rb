@@ -22,6 +22,12 @@ class Whose::LinkComponentTest < ViewComponent::TestCase
     assert_no_selector "a.text-accent-text"
   end
 
+  def test_link_accepts_string_variant
+    render_inline(Whose::LinkComponent.new(href: "/x", variant: "muted")) { "Go" }
+
+    assert_selector "a.text-muted"
+  end
+
   def test_link_has_a_focus_ring
     render_inline(Whose::LinkComponent.new(href: "/x")) { "Go" }
 
