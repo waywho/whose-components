@@ -1,5 +1,5 @@
 # Whose::Components
-Short description and motivation.
+A Rails engine with Tailwind UI components, a light and dark theme, and email-and-password auth that the gem holds. It also has a `rails new` template that sets up a new app with all of these.
 
 ## Usage
 Make a new app with the app template:
@@ -51,21 +51,94 @@ Each component has a view helper. The helper name is the component class name in
 `whose_form_with` wraps `form_with` and is not a component.
 
 ## Installation
-Add this line to your application's Gemfile:
+The gem is not on RubyGems. Add it to your Gemfile from GitHub:
 
 ```ruby
-gem "whose-components"
+gem "whose-components", github: "waywho/whose-components"
 ```
 
-And then execute:
+Then run:
+
 ```bash
-$ bundle
+bundle install
+bin/rails generate whose:components:install
 ```
 
-Or install it yourself as:
+The install generator does these things:
+
+- Adds `@import "../builds/tailwind/whose_components.css";` to `app/assets/tailwind/application.css`, after `@import "tailwindcss";`.
+- Adds `eagerLoadControllersFrom("whose/controllers", application)` to `app/javascript/controllers/index.js`.
+- Replaces `app/views/layouts/application.html.erb` with `app/views/layouts/application.html.haml`. The new layout uses the theme and renders the nav and flash components.
+
+For email-and-password sign-in, add `--auth`:
+
 ```bash
-$ gem install whose-components
+bin/rails generate whose:components:install --auth
 ```
+
+With `--auth`, the generator also does these things:
+
+- Creates the migrations `create_users` and `create_whose_sessions`.
+- Creates `app/models/user.rb`, which includes `Whose::Authenticatable`, and `test/factories/users.rb`.
+- Adds `include Whose::Authentication` to `ApplicationController`.
+- Adds `whose_authentication` to `config/routes.rb`. It defines the routes for `session`, `registration`, `confirmations` and `passwords`.
+- Adds a sign-out button to the nav in the layout.
+
+## Auth views
+To change the auth views, copy them into your app:
+
+```bash
+bin/rails generate whose:components:views
+```
+
+The generator copies the folders `sessions`, `registrations`, `confirmations`, `passwords` and `auth_mailer` from the gem to `app/views/whose/`. Your copies replace the views of the gem.
+
+## Auth hooks
+`Whose::Authentication` is included in `ApplicationController`. Override these private methods there to change the behaviour:
+
+| Method | Default |
+| --- | --- |
+| `after_sign_in_path` | `root_path` of the app, or `"/"` if the app has no root route |
+| `after_sign_up_path` | `new_session_path` |
+| `after_sign_out_path` | `new_session_path` |
+| `sign_up_params` | `params.expect(user: %i[first_name last_name email_address password password_confirmation])` |
+| `after_sign_up(user)` | Does nothing. It runs after a user signs up. |
+
+After sign-in, a user goes back to the page that they first asked for. `after_sign_in_path` applies only when there is no such page.
+
+Every action requires sign-in by default. To make a page public, call `allow_unauthenticated_access` in the controller:
+
+```ruby
+class PagesController < ApplicationController
+  allow_unauthenticated_access only: :home
+end
+```
+
+The auth flow never shows whether an email address has an account. Sign-in, sign-up, confirmation resend and password reset give the same status, page and message for a known and an unknown address.
+
+## Theme
+The theme tokens are CSS variables with the prefix `--whose-`, defined in `:root`. Dark mode redefines the colour variables under `prefers-color-scheme: dark`. The variables are:
+
+- Colours: `--whose-canvas`, `--whose-surface`, `--whose-subtle`, `--whose-fg`, `--whose-muted`, `--whose-border`, `--whose-accent`, `--whose-on-accent`, `--whose-accent-soft`, `--whose-accent-text`
+- Status colours: `--whose-positive`, `--whose-negative` and `--whose-warning`, each with a `-soft` variant
+- `--whose-radius`
+- Fonts: `--whose-font-sans`, `--whose-font-display`
+
+Tailwind has a utility for each token, for example `bg-surface`, `text-fg`, `border-border` and `bg-accent`.
+
+To change a token, set it in `app/assets/tailwind/application.css`, after the import of the gem CSS:
+
+```css
+:root {
+  --whose-accent: var(--color-teal-600);
+  --whose-radius: 0.75rem;
+}
+```
+
+Dark mode sets its own `--whose-accent`. To change the accent in dark mode too, set it again inside `@media (prefers-color-scheme: dark)`.
+
+## Pagination
+`pagination_component(pagy: @pagy)` renders `@pagy.series_nav`, so it needs Pagy 43. The gem does not depend on Pagy. Add `gem "pagy", "~> 43"` to your Gemfile. The component renders nothing when there is only one page.
 
 ## Development
 The `docs/` folder holds the docs app. It shows each component in Lookbook, and the gem's tests run against it.
