@@ -145,6 +145,156 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_no_selector "[data-form-row] span[aria-hidden=true]", visible: :all
   end
 
+  TYPED_FIELDS = {
+    search_field: "search", datetime_field: "datetime-local", datetime_local_field: "datetime-local", time_field: "time",
+    month_field: "month", week_field: "week", color_field: "color", range_field: "range"
+  }.freeze
+
+  TYPED_FIELDS.each do |helper, type|
+    define_method(:"test_#{helper}_renders_field_wrapper_with_label_hint_and_error") do
+      person = Person.new
+      person.errors.add(:name, "is invalid")
+
+      render_form(person) { it.public_send(helper, :name, hint: "A hint") }
+
+      assert_selector "[data-field] label[for=person_name]", text: "Name"
+      assert_selector "[data-field] input[type=#{type}].rounded-box[aria-invalid=true]"
+      assert_selector "#person_name_hint", text: "A hint"
+      assert_selector "#person_name_error", text: "is invalid"
+    end
+  end
+
+  def test_search_field_takes_the_placeholder_label
+    render_form(Person.new, labels: :placeholder) { it.search_field(:name) }
+
+    assert_selector "input[type=search]#person_name[placeholder=Name]"
+    assert_selector "label.sr-only[for=person_name]", visible: :all
+  end
+
+  def test_color_and_range_fields_keep_visible_labels_in_placeholder_mode
+    render_form(Person.new, labels: :placeholder) { it.color_field(:name) + it.range_field(:admin) }
+
+    assert_no_selector "input[placeholder]"
+    assert_selector "label[for=person_name]:not(.sr-only)", text: "Name"
+    assert_selector "label[for=person_admin]:not(.sr-only)", text: "Admin"
+  end
+
+  def test_collection_select_renders_field_wrapper_with_label_hint_and_options
+    render_form(Person.new) do
+      it.collection_select(:name, [ %w[Ann ann], %w[Bob bob] ], :last, :first, { label: "Who", hint: "Pick one" })
+    end
+
+    assert_selector "[data-field] label[for=person_name]", text: "Who"
+    assert_selector "[data-field] select.rounded-box#person_name option[value=bob]", text: "Bob"
+    assert_selector "#person_name_hint", text: "Pick one"
+  end
+
+  def test_collection_select_marks_invalid_input
+    person = Person.new
+    person.errors.add(:name, "is invalid")
+
+    render_form(person) { it.collection_select(:name, [ %w[Ann ann] ], :last, :first) }
+
+    assert_selector "select[aria-invalid=true][aria-describedby~=person_name_error]"
+  end
+
+  def test_radio_button_is_styled_without_a_field_wrapper
+    render_form(Person.new) { it.radio_button(:name, "ann") }
+
+    assert_selector "input[type=radio]#person_name_ann.accent-accent"
+    assert_no_selector "[data-field]"
+  end
+
+  def test_radio_group_is_labelled_by_its_label_and_puts_each_label_after_its_radio
+    render_form(Person.new) do
+      it.collection_radio_buttons(:name, [ %w[Ann ann], %w[Bob bob] ], :last, :first, { label: "Who" })
+    end
+
+    assert_selector "[data-field][role=group][aria-labelledby=person_name_label]"
+    assert_selector "#person_name_label", text: "Who"
+    assert_selector "input[type=radio]#person_name_ann.accent-accent + label[for=person_name_ann]", text: "Ann"
+    assert_selector "input[type=radio]#person_name_bob + label[for=person_name_bob]", text: "Bob"
+  end
+
+  def test_radio_group_shows_hint_and_error_once_and_every_radio_points_to_them
+    person = Person.new
+    person.errors.add(:name, "is invalid")
+
+    render_form(person) do
+      it.collection_radio_buttons(:name, [ %w[Ann ann], %w[Bob bob] ], :last, :first, { hint: "Pick one" })
+    end
+
+    assert_selector "#person_name_hint", text: "Pick one", count: 1
+    assert_selector "#person_name_error", text: "is invalid", count: 1
+    assert_selector "input[type=radio][aria-invalid=true][aria-describedby='person_name_hint person_name_error']", count: 2
+  end
+
+  def test_field_outside_a_group_has_no_group_role
+    render_form(Person.new) { it.text_field(:name) }
+
+    assert_no_selector "[data-field][role]"
+    assert_no_selector "[data-field][aria-labelledby]"
+  end
+
+  def test_radio_group_keeps_a_visible_label_in_placeholder_mode
+    render_form(Person.new, labels: :placeholder) do
+      it.collection_radio_buttons(:name, [ %w[Ann ann] ], :last, :first)
+    end
+
+    assert_selector "#person_name_label:not(.sr-only)", text: "Name"
+  end
+
+  def test_input_keeps_caller_describedby_and_joins_hint_and_error_ids
+    person = Person.new
+    person.errors.add(:name, "is invalid")
+
+    render_form(person) { it.text_field(:name, hint: "A hint", aria: { describedby: "extra" }) }
+
+    assert_selector "input[aria-describedby='extra person_name_hint person_name_error']"
+  end
+
+  def test_input_keeps_caller_describedby_when_there_is_no_hint_or_error
+    render_form(Person.new) { it.text_field(:name, aria: { describedby: "extra" }) }
+
+    assert_selector "input[aria-describedby=extra]"
+  end
+
+  def test_checkbox_keeps_caller_describedby_and_joins_hint_id
+    render_form(Person.new) { it.checkbox(:admin, hint: "A hint", aria: { describedby: "extra" }) }
+
+    assert_selector "input[type=checkbox][aria-describedby='extra person_admin_hint']"
+  end
+
+  def test_select_renders_field_wrapper_with_label_hint_and_error
+    person = Person.new
+    person.errors.add(:name, "is invalid")
+
+    render_form(person) { it.select(:name, %w[Ann Bob], { label: "Who", hint: "Pick one" }) }
+
+    assert_selector "[data-field] label[for=person_name]", text: "Who"
+    assert_selector "[data-field] select.rounded-box#person_name option", text: "Bob"
+    assert_selector "#person_name_hint", text: "Pick one"
+    assert_selector "select[aria-invalid=true][aria-describedby='person_name_hint person_name_error']"
+  end
+
+  def test_toggle_renders_a_switch_with_label_after_input
+    render_form(Person.new) { it.toggle(:admin, label: "Admin access", hint: "A hint") }
+
+    assert_selector "[data-field] input[type=checkbox][role=switch].appearance-none + label[for=person_admin]", text: "Admin access"
+    assert_selector "input[aria-describedby=person_admin_hint]"
+  end
+
+  def test_file_field_renders_field_wrapper_with_label_and_error
+    person = Person.new
+    person.errors.add(:name, "is invalid")
+
+    render_form(person) { it.file_field(:name, hint: "A hint") }
+
+    assert_selector "[data-field] label[for=person_name]", text: "Name"
+    assert_selector "[data-field] input[type=file].file\\:bg-accent-soft[aria-invalid=true]"
+    assert_selector "#person_name_hint", text: "A hint"
+  end
+
   def test_unknown_labels_option_raises
     assert_raises(ArgumentError) { render_form(Person.new, labels: :floating) { it.text_field(:name) } }
   end

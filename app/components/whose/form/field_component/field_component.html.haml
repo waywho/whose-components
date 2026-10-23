@@ -1,5 +1,7 @@
-%div{class: wrapper_classes, data: { field: true, layout: @layout }}
-  - unless @inline
+%div{ wrapper_attributes }
+  - if @group
+    %span{id: label_id, class: LABEL_CLASSES[:vertical]}= label_text
+  - elsif !@inline
     = @form.label(@method, label_text, class: label_classes)
   %div{class: "flex flex-col gap-1 sm:col-start-2"}
     - if @inline
