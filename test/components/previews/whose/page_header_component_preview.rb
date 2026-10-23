@@ -4,7 +4,6 @@ class Whose::PageHeaderComponentPreview < ViewComponent::Preview
   include Whose::ComponentHelper
 
   def default
-    render_with_template
   end
 
   def title_only
