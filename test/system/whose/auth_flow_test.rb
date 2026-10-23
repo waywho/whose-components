@@ -77,6 +77,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Email address", with: "ann@example.com"
     click_button "Send the link"
 
+    assert_current_path new_session_path
     assert_text I18n.t("whose.passwords.sent")
     perform_enqueued_jobs
     visit mail_link
@@ -84,6 +85,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Confirm the new password", with: "new-password456"
     click_button "Change password"
 
+    assert_current_path new_session_path
     assert_text I18n.t("whose.passwords.updated")
     sign_in_with "ann@example.com", "new-password456"
     assert_current_path dashboard_path

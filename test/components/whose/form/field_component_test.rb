@@ -13,7 +13,7 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     person = Person.new
     person.errors.add(:name, "can't be blank")
 
-    render_form(person) { |form| form.text_field(:name) }
+    render_form(person) { it.text_field(:name) }
 
     assert_selector "p#person_name_error", text: "can't be blank"
     assert_selector "input[aria-invalid=true]"
@@ -21,15 +21,15 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
   end
 
   def test_horizontal_layout_marks_wrapper
-    render_form(Person.new, layout: :horizontal) { |form| form.text_field(:name) }
+    render_form(Person.new, layout: :horizontal) { it.text_field(:name) }
 
     assert_selector "[data-layout=horizontal]"
     assert_no_selector "[data-layout=vertical]"
   end
 
   def test_inline_layout_puts_fields_and_submit_in_one_row
-    render_form(Person.new, layout: :inline) do |form|
-      form.text_field(:name, hint: "Full name") + form.text_field(:admin) + form.submit("Save")
+    render_form(Person.new, layout: :inline) do
+      it.text_field(:name, hint: "Full name") + it.text_field(:admin) + it.submit("Save")
     end
 
     assert_selector "[data-form-row] [data-field][data-layout=inline] label[for=person_name]", text: "Name"
@@ -39,23 +39,23 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
   end
 
   def test_other_layouts_have_no_row_wrapper
-    render_form(Person.new) { |form| form.text_field(:name) }
+    render_form(Person.new) { it.text_field(:name) }
 
     assert_no_selector "[data-form-row]"
   end
 
   def test_unknown_layout_raises
-    assert_raises(ArgumentError) { render_form(Person.new, layout: :diagonal) { |form| form.text_field(:name) } }
+    assert_raises(ArgumentError) { render_form(Person.new, layout: :diagonal) { it.text_field(:name) } }
   end
 
   def test_label_defaults_to_humanized_attribute
-    render_form(Person.new) { |form| form.text_field(:name) }
+    render_form(Person.new) { it.text_field(:name) }
 
     assert_selector "label[for=person_name]", text: "Name"
   end
 
   def test_check_box_puts_label_after_input
-    render_form(Person.new) { |form| form.check_box(:admin, label: "Administrator") }
+    render_form(Person.new) { it.check_box(:admin, label: "Administrator") }
 
     assert_selector "input[type=checkbox] + label[for=person_admin]", text: "Administrator"
   end
@@ -64,45 +64,45 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     person = Person.new
     person.errors.add(:admin, "must be accepted")
 
-    render_form(person) { |form| form.check_box(:admin, aria: { label: "Accept" }) }
+    render_form(person) { it.check_box(:admin, aria: { label: "Accept" }) }
 
     assert_selector "input[type=checkbox][aria-label=Accept][aria-invalid=true][aria-describedby~=person_admin_error]"
   end
 
   def test_checkbox_renders_field_wrapper_with_label
-    render_form(Person.new) { |form| form.checkbox(:admin) }
+    render_form(Person.new) { it.checkbox(:admin) }
 
     assert_selector "[data-field] input[type=checkbox] + label[for=person_admin]", text: "Admin"
   end
 
   def test_textarea_renders_field_wrapper_with_label
-    render_form(Person.new) { |form| form.textarea(:name) }
+    render_form(Person.new) { it.textarea(:name) }
 
     assert_selector "[data-field] label[for=person_name]", text: "Name"
     assert_selector "[data-field] textarea.rounded-box"
   end
 
   def test_text_area_alias_renders_field_wrapper
-    render_form(Person.new) { |form| form.text_area(:name) }
+    render_form(Person.new) { it.text_area(:name) }
 
     assert_selector "[data-field] textarea.rounded-box"
   end
 
   def test_phone_field_renders_field_wrapper_with_label
-    render_form(Person.new) { |form| form.phone_field(:name) }
+    render_form(Person.new) { it.phone_field(:name) }
 
     assert_selector "[data-field] label[for=person_name]", text: "Name"
     assert_selector "[data-field] input[type=tel].rounded-box"
   end
 
   def test_telephone_field_renders_field_wrapper
-    render_form(Person.new) { |form| form.telephone_field(:name) }
+    render_form(Person.new) { it.telephone_field(:name) }
 
     assert_selector "[data-field] input[type=tel].rounded-box"
   end
 
   def test_password_field_has_show_hide_button
-    render_form(Person.new) { |form| form.password_field(:name) }
+    render_form(Person.new) { it.password_field(:name) }
 
     assert_selector "[data-controller=whose-password-visibility] input[type=password][data-whose-password-visibility-target=input].pr-16"
     assert_selector "button[data-action='whose-password-visibility#toggle']", text: "Show"
@@ -110,13 +110,13 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
   end
 
   def test_submit_renders_submit_button
-    render_form(Person.new) { |form| form.submit("Save") }
+    render_form(Person.new) { it.submit("Save") }
 
     assert_selector "button[type=submit]", text: "Save"
   end
 
   def test_placeholder_labels_put_the_label_in_the_placeholder_and_hide_it
-    render_form(Person.new, labels: :placeholder) { |form| form.text_field(:name) + form.textarea(:admin) }
+    render_form(Person.new, labels: :placeholder) { it.text_field(:name) + it.textarea(:admin) }
 
     assert_selector "input#person_name[placeholder=Name]"
     assert_selector "textarea#person_admin[placeholder=Admin]"
@@ -125,14 +125,14 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
   end
 
   def test_placeholder_labels_keep_a_placeholder_that_the_field_sets
-    render_form(Person.new, labels: :placeholder) { |form| form.text_field(:name, placeholder: "Ann Lee") }
+    render_form(Person.new, labels: :placeholder) { it.text_field(:name, placeholder: "Ann Lee") }
 
     assert_selector "input#person_name[placeholder='Ann Lee']"
   end
 
   def test_placeholder_labels_keep_visible_labels_on_fields_without_a_placeholder
-    render_form(Person.new, labels: :placeholder) do |form|
-      form.select(:name, %w[Ann Bob]) + form.checkbox(:admin)
+    render_form(Person.new, labels: :placeholder) do
+      it.select(:name, %w[Ann Bob]) + it.checkbox(:admin)
     end
 
     assert_selector "label[for=person_name]:not(.sr-only)", text: "Name"
@@ -140,13 +140,13 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
   end
 
   def test_placeholder_labels_drop_the_label_spacer_in_an_inline_form
-    render_form(Person.new, layout: :inline, labels: :placeholder) { |form| form.text_field(:name) + form.submit("Save") }
+    render_form(Person.new, layout: :inline, labels: :placeholder) { it.text_field(:name) + it.submit("Save") }
 
     assert_no_selector "[data-form-row] span[aria-hidden=true]", visible: :all
   end
 
   def test_unknown_labels_option_raises
-    assert_raises(ArgumentError) { render_form(Person.new, labels: :floating) { |form| form.text_field(:name) } }
+    assert_raises(ArgumentError) { render_form(Person.new, labels: :floating) { it.text_field(:name) } }
   end
 
   private
