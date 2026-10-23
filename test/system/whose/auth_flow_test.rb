@@ -36,7 +36,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Confirm the password", with: "password123"
     click_button "Sign up"
 
-    assert_text "Enter a value."
+    assert_selector "#user_first_name_error", text: "Enter a value."
   end
 
   def test_wrong_password_shows_one_alert_and_right_password_signs_in
