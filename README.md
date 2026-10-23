@@ -5,8 +5,12 @@ A Rails engine with Tailwind UI components, a light and dark theme, and email-an
 Make a new app with the app template:
 
 ```bash
-rails new myapp -d postgresql --css tailwind -m https://raw.githubusercontent.com/waywho/whose-components/main/lib/templates/whose_app_template.rb
+rails new myapp -d postgresql --css tailwind -m https://raw.githubusercontent.com/waywho/whose-components/v0.1.0/lib/templates/whose_app_template.rb
 ```
+
+The URL names a ref: a tag, a branch, or `refs/tags/<tag>` or `refs/heads/<branch>`. The gem and the template files both come from that ref. A branch name that has a slash does not work.
+
+If you pass `--skip-bundle`, the template prints the commands that you must run by hand.
 
 The template asks if the app needs sign-in. Set `WHOSE_AUTH=yes` or `WHOSE_AUTH=no` to answer without the prompt.
 
