@@ -113,11 +113,19 @@ if root_page
   RUBY
 end
 
+github_steps = <<~TEXT
+  To put the app on GitHub:
+  1. Make an empty repository at https://github.com/new.
+  2. Run: git remote add origin git@github.com:<your-account>/#{app_name}.git
+  3. Run: git push -u origin main
+TEXT
+
 after_bundle do
   if options[:skip_bundle]
     say "Bundling was skipped. Run these commands in the app: bundle install, " \
         "bin/rails generate whose:components:install#{" --auth" if auth}, bin/rubocop -A, " \
-        "bin/rails db:create db:migrate, then make the first commit."
+        'bin/rails db:create db:migrate, git init, git add . and git commit -m "Initial commit".'
+    say github_steps
     next
   end
 
@@ -125,6 +133,12 @@ after_bundle do
   run "bin/rubocop -A"
   rails_command "db:create"
   rails_command "db:migrate"
+  if options[:skip_git]
+    say "Git was skipped, so the template made no commit."
+    next
+  end
+
   git add: "."
-  git commit: %(-m "Initial app from the whose-components template")
+  git commit: %(-m "Initial commit")
+  say github_steps
 end

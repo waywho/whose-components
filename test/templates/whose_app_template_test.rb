@@ -73,6 +73,15 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes output, "bin/rails db:create db:migrate"
   end
 
+  test "tells how to add a GitHub remote when bundling is skipped" do
+    output = generate_app("--no-auth")
+
+    assert_includes output, %(git commit -m "Initial commit")
+    assert_includes output, "https://github.com/new"
+    assert_includes output, "git remote add origin git@github.com:<your-account>/demo.git"
+    assert_includes output, "git push -u origin main"
+  end
+
   test "leaves sign-in out with --no-auth" do
     output = generate_app("--no-auth")
 
