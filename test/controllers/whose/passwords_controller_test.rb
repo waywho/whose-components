@@ -79,6 +79,16 @@ class Whose::PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("whose.passwords.invalid"), flash[:alert]
   end
 
+  test "token of a deleted user redirects with message" do
+    link = edit_password_path(token)
+    @user.destroy
+
+    get link
+
+    assert_redirected_to new_password_path
+    assert_equal I18n.t("whose.passwords.invalid"), flash[:alert]
+  end
+
   test "expired token redirects with message" do
     link = edit_password_path(token)
 
