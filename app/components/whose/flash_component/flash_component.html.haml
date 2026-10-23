@@ -2,8 +2,7 @@
   - @messages.each do |type, message|
     %div{ class: "flex items-start gap-3 rounded-box border p-4 font-sans text-sm shadow-lg #{style_for(type)}",
           role: type == "alert" ? "alert" : "status",
-          data: { flash_type: type,
-                  controller: "whose-notification",
+          data: { controller: "whose-notification",
                   whose_notification_delay_value: delay_for(type),
                   transition_enter_active: "transition ease-out duration-300",
                   transition_enter_from: "opacity-0",

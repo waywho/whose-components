@@ -69,7 +69,33 @@ Before you change code, run only a new test.
   A test that only checks that content is on the page belongs in a component
   test.
 - In a system test, never select by a Tailwind class, and never assert styling.
-  Select by `id`, `dom_id`, a `data-*` attribute, a role or a label.
+  Select by a role, a label, the text, or an `id` or `data-*` attribute that
+  the page already needs for its own work, such as an `aria-describedby`
+  target or a Stimulus target.
+- Never add an attribute, an `id` or a class to the page only for a test. If a
+  test cannot find an element, select it by its role, its label or its text.
+
+### System tests that do not flake
+
+A flaky system test is a race between the test and the page. Find the race and
+remove it. Never add `sleep`, a longer wait, or a retry.
+
+- After a click, a submit or a `visit` that loads a new page or a Turbo
+  response, wait for an element that exists only on the new page:
+  `assert_selector "#user_name_error", text: "Enter a value."`. Turbo replaces
+  the `body`, and a check that holds a node of the old page fails. The
+  selector must match nothing on the old page: `h1` matches on both pages.
+- Never put `assert_text` or `assert_no_text` right after such an action. They
+  read the whole `body`, which can be the old one. Scope the text to an
+  element with `assert_selector ..., text:`.
+- `assert_current_path` alone does not prove the new page rendered. Turbo can
+  change the URL before it replaces the `body`.
+- Use only the matchers that wait: `assert_selector`, `assert_no_selector`,
+  `assert_current_path`, `assert_field`, `assert_link`, `assert_button`. Never
+  assert on a value that you read once, such as `find(...).text`,
+  `all(...).count` or `page.has_text?`.
+- To check that something went away, use `assert_no_selector` on that element.
+- Run each new or changed system test three times before you commit it.
 
 ## Conventions
 

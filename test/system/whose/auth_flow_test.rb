@@ -15,15 +15,15 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Confirm the password", with: "password123"
     click_button "Sign up"
 
+    assert_selector "[role=status]", text: I18n.t("whose.registrations.created")
     assert_current_path new_session_path
-    assert_text I18n.t("whose.registrations.created")
     perform_enqueued_jobs
     visit mail_link
 
     click_button "Confirm email address"
 
+    assert_selector "[role=status]", text: I18n.t("whose.confirmations.confirmed")
     assert_current_path dashboard_path
-    assert_text I18n.t("whose.confirmations.confirmed")
     assert_text "ann@example.com"
     assert_equal "Ann", User.find_by!(email_address: "ann@example.com").name
   end
@@ -36,7 +36,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Confirm the password", with: "password123"
     click_button "Sign up"
 
-    assert_text "Enter a value."
+    assert_selector "#user_first_name_error", text: "Enter a value."
   end
 
   def test_wrong_password_shows_one_alert_and_right_password_signs_in
@@ -49,6 +49,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
 
     sign_in_with "ann@example.com", "password123"
 
+    assert_button "Sign out"
     assert_current_path dashboard_path
     assert_text "ann@example.com"
   end
@@ -60,6 +61,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
 
     assert_selector "[role=alert]", text: I18n.t("whose.sessions.unconfirmed")
     click_link I18n.t("whose.sessions.new.resend")
+    assert_button I18n.t("whose.confirmations.new.submit")
     assert_current_path new_confirmation_path
     assert_selector "h1", text: I18n.t("whose.confirmations.new.title")
   end
@@ -77,6 +79,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
 
     click_link "Forgot your password?"
 
+    assert_button "Send the link"
     assert_current_path new_password_path
     assert_selector "h1", text: I18n.t("whose.passwords.new.title")
   end
@@ -88,16 +91,16 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     fill_in "Email address", with: "ann@example.com"
     click_button "Send the link"
 
+    assert_selector "[role=status]", text: I18n.t("whose.passwords.sent")
     assert_current_path new_session_path
-    assert_text I18n.t("whose.passwords.sent")
     perform_enqueued_jobs
     visit mail_link
     fill_in "New password", with: "new-password456", exact: true
     fill_in "Confirm the new password", with: "new-password456"
     click_button "Change password"
 
+    assert_selector "[role=status]", text: I18n.t("whose.passwords.updated")
     assert_current_path new_session_path
-    assert_text I18n.t("whose.passwords.updated")
     sign_in_with "ann@example.com", "new-password456"
     assert_current_path dashboard_path
   end
@@ -109,8 +112,8 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
 
     click_button "Sign out"
 
+    assert_selector "[role=status]", text: I18n.t("whose.sessions.signed_out")
     assert_current_path new_session_path
-    assert_text I18n.t("whose.sessions.signed_out")
     visit dashboard_path
     assert_current_path new_session_path
   end

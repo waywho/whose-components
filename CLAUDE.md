@@ -3,6 +3,11 @@
 A Rails engine: UI components, a theme with dark mode, email-and-password
 auth, and an app template for `rails new`.
 
+The gem has one job: it gives UI components that an app assembles into its
+pages. The app owns its data and its server side: models, controllers, jobs
+and streaming. The auth is the one exception. No new feature adds models,
+controllers, jobs or routes to the gem.
+
 ## Commands
 
 ```sh
@@ -38,5 +43,19 @@ the end. The only difference: the Commands above replace the app commands.
 - The auth flow never shows whether an email address has an account. Sign-in,
   sign-up, confirmation resend and password reset give the same status, page
   and message for a known and an unknown address.
+- The auth is optional. An app with no `User` model and no
+  `include Whose::Authentication` boots and renders components, and the engine
+  adds no routes until the app calls `whose_authentication`.
+- A component raises `ArgumentError` for an unknown value of a choice, such as
+  a variant, a size or a placement.
+- A component uses only the theme classes from `engine.css`, such as
+  `bg-surface` and `text-muted`. Never use a Tailwind palette color, such as
+  `bg-stone-200`.
+- Before you write a Stimulus controller, look for a Stimulus Components
+  package (`@stimulus-components/*`) that does the job. Pin it in `docs/` with
+  `bin/importmap pin`, move the file to `vendor/javascript/` and its pin line to
+  `config/importmap.rb`, and keep its license header. Wrap it in
+  `app/javascript/whose/controllers/whose_<name>_controller.js`, so apps use
+  only `whose-*` identifiers.
 
 @lib/templates/app/CLAUDE.md.tt
