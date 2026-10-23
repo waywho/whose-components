@@ -55,6 +55,13 @@ class Whose::TooltipComponentTest < ViewComponent::TestCase
     assert_equal 4, classes.values.uniq.size
   end
 
+  def test_string_placement_works_like_the_symbol
+    from_string = render_inline(Whose::TooltipComponent.new(text: "Help", placement: "bottom")).css("[role=tooltip]").first[:class]
+    from_symbol = render_inline(Whose::TooltipComponent.new(text: "Help", placement: :bottom)).css("[role=tooltip]").first[:class]
+
+    assert_equal from_symbol, from_string
+  end
+
   def test_unknown_placement_raises
     assert_raises(ArgumentError) { Whose::TooltipComponent.new(text: "Help", placement: :middle) }
   end
