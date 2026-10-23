@@ -11,7 +11,7 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   teardown { FileUtils.remove_entry(@tmp_dir) }
 
   test "writes the gems, settings and rules into a new app with sign-in" do
-    generate_app("WHOSE_AUTH" => "yes")
+    generate_app("--auth")
 
     gemfile = app_file("Gemfile")
     assert_includes gemfile, %(gem "haml-rails")
@@ -41,7 +41,7 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   end
 
   test "installs the gem from WHOSE_GEM_PATH and needs no prompt without sign-in" do
-    generate_app("WHOSE_AUTH" => "no", "WHOSE_GEM_PATH" => "/src/whose-components")
+    generate_app("--no-auth", env: { "WHOSE_GEM_PATH" => "/src/whose-components" })
 
     assert_includes app_file("Gemfile"), %(gem "whose-components", path: "/src/whose-components")
   end
@@ -57,11 +57,17 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   end
 
   test "names the commands to run by hand when bundling is skipped" do
-    output = generate_app("WHOSE_AUTH" => "yes")
+    output = generate_app("--auth")
 
     assert_includes output, "bin/rails generate whose:components:install --auth"
     assert_includes output, "bin/rubocop -A"
     assert_includes output, "bin/rails db:create db:migrate"
+  end
+
+  test "leaves sign-in out with --no-auth" do
+    output = generate_app("--no-auth")
+
+    assert_includes output, "bin/rails generate whose:components:install, "
   end
 
   test "reads the root page from the --root flag" do
@@ -72,7 +78,7 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   end
 
   test "adds the root page that --root names, behind sign-in" do
-    generate_app({ "WHOSE_AUTH" => "yes" }, "--root", "landing#show")
+    generate_app("--auth", "--root", "landing#show")
 
     assert_includes app_file("config/routes.rb"), %(root "landing#show")
     assert_match(/class LandingController < ApplicationController\n  def show; end\nend/, app_file("app/controllers/landing_controller.rb"))
@@ -81,14 +87,14 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   end
 
   test "adds a root page that renders without sign-in" do
-    generate_app({ "WHOSE_AUTH" => "no" }, "--root=pages#home")
+    generate_app("--no-auth", "--root=pages#home")
 
     assert_includes app_file("config/routes.rb"), %(root "pages#home")
     assert_includes app_file("test/controllers/pages_controller_test.rb"), "assert_response :success"
   end
 
   test "adds no root page without --root" do
-    generate_app("WHOSE_AUTH" => "no")
+    generate_app("--no-auth")
 
     assert_not_includes app_file("config/routes.rb"), %(\n  root )
     assert_not File.exist?(File.join(app_path, "app/controllers/pages_controller.rb"))
@@ -117,8 +123,8 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     File.read(File.join(app_path, path))
   end
 
-  def generate_app(env, *flags)
-    previous_env = ENV.to_h.slice("WHOSE_AUTH", "WHOSE_GEM_PATH")
+  def generate_app(*flags, env: {})
+    previous_env = ENV.to_h.slice("WHOSE_GEM_PATH")
     previous_argv = ARGV.dup
     previous_dir = Dir.pwd
     ENV.update(env)

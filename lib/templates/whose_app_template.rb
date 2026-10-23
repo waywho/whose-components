@@ -29,7 +29,7 @@ else
   source_paths.unshift(File.join(__dir__, "app"))
 end
 
-auth = ENV["WHOSE_AUTH"] ? ENV["WHOSE_AUTH"].match?(/\A(y|yes|true|1)\z/i) : yes?("Add sign-in? (y/n)")
+auth = ARGV.include?("--auth") || (!ARGV.include?("--no-auth") && yes?("Add sign-in? (y/n)"))
 
 gem "haml-rails"
 gem "view_component"

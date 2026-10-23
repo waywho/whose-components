@@ -14,7 +14,7 @@ Add `--root pages#home` to make a root page. The template writes the route, the 
 
 If you pass `--skip-bundle`, the template prints the commands that you must run by hand.
 
-The template asks if the app needs sign-in. Set `WHOSE_AUTH=yes` or `WHOSE_AUTH=no` to answer without the prompt.
+The template asks if the app needs sign-in. Add `--auth` or `--no-auth` to answer without the prompt.
 
 Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from that path instead of GitHub.
 
