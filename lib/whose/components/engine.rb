@@ -4,6 +4,7 @@ module Whose
   module Components
     class Engine < ::Rails::Engine
       engine_name "whose_components"
+      config.generators.template_engine :haml
 
       initializer "whose_components.importmap", before: "importmap" do |app|
         app.config.importmap.paths << root.join("config/importmap.rb")
