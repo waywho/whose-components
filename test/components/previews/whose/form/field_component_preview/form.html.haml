@@ -4,10 +4,20 @@
       = f.text_field :name, hint: "Use your full name."
       = f.email_field :email
       = f.password_field :password, hint: "Use at least 12 characters."
+      = f.search_field :bio
+      = f.datetime_local_field :name, label: "Starts at"
+      = f.time_field :name, label: "Time"
+      = f.month_field :name, label: "Month"
+      = f.week_field :name, label: "Week"
+      = f.color_field :name, label: "Color"
+      = f.range_field :name, label: "Range"
       = f.text_area :bio, rows: 2
       = f.select :role, [["Editor", "editor"], ["Admin", "admin"]], label: "Role"
+      = f.collection_select :role, [["Editor", "editor"], ["Admin", "admin"]], :last, :first, label: "Role from a collection"
       = f.file_field :avatar
       = f.check_box :newsletter, label: "Send me the newsletter"
+      = f.radio_button :role, "editor", label: "Editor"
+      = f.radio_button :role, "admin", label: "Admin"
       = f.toggle :notifications, label: "Notifications", hint: "Send an email for each new comment."
       %div
         = f.submit "Save"

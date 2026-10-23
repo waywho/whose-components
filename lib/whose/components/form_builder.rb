@@ -7,10 +7,19 @@ module Whose
     class FormBuilder < ActionView::Helpers::FormBuilder
       delegate :render, :tag, :content_tag, :safe_join, :t, to: :@template
 
-      %i[text_field email_field number_field telephone_field phone_field url_field date_field].each do |type|
+      %i[text_field email_field number_field telephone_field phone_field url_field date_field search_field
+         datetime_field datetime_local_field time_field month_field week_field].each do |type|
         define_method(type) do |method, label: nil, hint: nil, **options|
           field(method, label:, hint:, placeholder: true) { |component| super(method, **input_options(component, options)) }
         end
+      end
+
+      def color_field(method, label: nil, hint: nil, **options)
+        field(method, label:, hint:) { |component| super(method, **input_options(component, options, field_classes[:color])) }
+      end
+
+      def range_field(method, label: nil, hint: nil, **options)
+        field(method, label:, hint:) { |component| super(method, **input_options(component, options)) }
       end
 
       def password_field(method, label: nil, hint: nil, **options)
@@ -40,6 +49,22 @@ module Whose
         label, hint = options.values_at(:label, :hint)
         field(method, label:, hint:) do |component|
           super(method, choices, options.except(:label, :hint), input_options(component, html_options), &block)
+        end
+      end
+
+      def collection_select(method, collection, value_method, text_method, options = {}, html_options = {})
+        label, hint = options.values_at(:label, :hint)
+        field(method, label:, hint:) do |component|
+          super(method, collection, value_method, text_method, options.except(:label, :hint),
+                input_options(component, html_options))
+        end
+      end
+
+      def radio_button(method, tag_value, options = {})
+        label, hint = options.values_at(:label, :hint)
+        field(method, label: label || tag_value.to_s.humanize, hint:, inline: true, value: tag_value) do |component|
+          super(method, tag_value, options.except(:label, :hint).merge(class: [ field_classes[:radio], options[:class] ].compact,
+                                                                       aria: component.aria(options[:aria] || {})))
         end
       end
 
@@ -77,8 +102,8 @@ module Whose
         @options[:labels] || :visible
       end
 
-      def field(method, label:, hint:, inline: false, placeholder: false, &block)
-        component = Whose::Form::FieldComponent.new(form: self, method:, label:, hint:, layout:, inline:,
+      def field(method, label:, hint:, inline: false, placeholder: false, value: nil, &block)
+        component = Whose::Form::FieldComponent.new(form: self, method:, label:, hint:, layout:, inline:, value:,
                                                     placeholder_label: placeholder && labels == :placeholder)
         render(component) { block.call(component) }
       end
@@ -86,14 +111,14 @@ module Whose
       def input_options(component, options, extra_class = nil)
         placeholder = component.placeholder_label? ? { placeholder: component.label_text } : {}
         placeholder.merge(options).merge(class: [ field_classes[:input], extra_class, options[:class] ].compact,
-                                         aria: (options[:aria] || {}).merge(component.aria))
+                                         aria: component.aria(options[:aria] || {}))
       end
 
       def styled_checkbox(attribute, options, checked_value, unchecked_value, css_class)
         label, hint = options.values_at(:label, :hint)
         field(attribute, label:, hint:, inline: true) do |component|
           checkbox_options = options.except(:label, :hint).merge(class: [ css_class, options[:class] ].compact,
-                                                                 aria: (options[:aria] || {}).merge(component.aria))
+                                                                 aria: component.aria(options[:aria] || {}))
           ActionView::Helpers::FormBuilder.instance_method(:checkbox)
                                           .bind_call(self, attribute, checkbox_options, checked_value, unchecked_value)
         end

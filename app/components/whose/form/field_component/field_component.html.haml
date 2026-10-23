@@ -5,7 +5,7 @@
     - if @inline
       .flex.items-center.gap-2
         = content
-        = @form.label(@method, label_text, class: "text-sm text-fg")
+        = @form.label(@method, label_text, class: "text-sm text-fg", value: @value)
     - else
       = content
     - if @hint

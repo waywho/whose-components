@@ -9,6 +9,9 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     file: "file:mr-3 file:rounded-box file:border-0 file:bg-accent-soft file:px-3 file:py-1 file:text-accent-text",
     check: "size-4 rounded-box border border-border accent-accent " \
            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+    color: "h-10 cursor-pointer p-1!",
+    radio: "size-4 rounded-full border border-border accent-accent " \
+           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
     toggle: "h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-border transition-colors checked:bg-accent " \
             "before:m-0.5 before:block before:size-4 before:rounded-full before:bg-surface before:transition-transform " \
             "checked:before:translate-x-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
@@ -28,7 +31,8 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     inline: "text-sm font-medium text-fg"
   }.freeze
 
-  def initialize(form:, method:, label:, hint:, layout:, inline: false, placeholder_label: false)
+  def initialize(form:, method:, label:, hint:, layout:, inline: false, placeholder_label: false, value: nil)
+    @value = value
     @form = form
     @method = method
     @label = label
@@ -58,9 +62,9 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     "#{@form.object_name}_#{@method}_hint"
   end
 
-  def aria
-    describedby = [ (hint_id if @hint), (error_id if error_message) ].compact.join(" ")
-    { invalid: (true if error_message), describedby: describedby.presence }.compact
+  def aria(caller_aria = {})
+    describedby = [ caller_aria[:describedby], (hint_id if @hint), (error_id if error_message) ].compact.join(" ")
+    caller_aria.merge(invalid: (true if error_message), describedby: describedby.presence).compact
   end
 
   def wrapper_classes
