@@ -8,9 +8,8 @@ class Whose::FlashComponentSystemTest < ApplicationSystemTestCase
 
     assert_selector "[data-flash-type=alert]"
     assert_selector "[data-flash-type=notice]"
-    assert_no_selector "[data-flash-type=notice]", wait: 8
+    assert_no_selector "[data-flash-type=notice]", wait: 7
 
-    sleep 1
     assert_selector "[data-flash-type=alert]"
 
     find("[data-flash-type=alert] button").click

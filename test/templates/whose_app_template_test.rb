@@ -46,7 +46,30 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes app_file("Gemfile"), %(gem "whose-components", path: "/src/whose-components")
   end
 
+  test "reads the ref from each form of template URL" do
+    base = "https://raw.githubusercontent.com/waywho/whose-components"
+    path = "lib/templates/whose_app_template.rb"
+
+    assert_equal "v0.1.0", template_ref("#{base}/v0.1.0/#{path}")
+    assert_equal "main", template_ref("#{base}/refs/heads/main/#{path}")
+    assert_equal "v0.1.0", template_ref("#{base}/refs/tags/v0.1.0/#{path}")
+    assert_nil template_ref("/src/whose-components/#{path}")
+  end
+
+  test "names the commands to run by hand when bundling is skipped" do
+    output = generate_app("WHOSE_AUTH" => "yes")
+
+    assert_includes output, "bin/rails generate whose:components:install --auth"
+    assert_includes output, "bin/rubocop -A"
+    assert_includes output, "bin/rails db:create db:migrate"
+  end
+
   private
+
+  def template_ref(url)
+    source = File.read(TEMPLATE)[/^def whose_template_ref.*?^end$/m]
+    Object.new.tap { it.instance_eval(source) }.whose_template_ref(url)
+  end
 
   def app_path
     File.join(@tmp_dir, "demo")
@@ -60,7 +83,9 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     previous_env = ENV.to_h.slice("WHOSE_AUTH", "WHOSE_GEM_PATH")
     previous_dir = Dir.pwd
     ENV.update(env)
-    Rails::Generators::AppGenerator.start([ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", "--quiet", "-m", TEMPLATE ])
+    capture_io do
+      Rails::Generators::AppGenerator.start([ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", "-m", TEMPLATE ])
+    end.first
   ensure
     Dir.chdir(previous_dir)
     env.each_key { ENV.delete(it) }

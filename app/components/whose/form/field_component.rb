@@ -18,7 +18,8 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     password_wrapper: "relative",
     password_input: "pr-16",
     password_hidden: "hidden",
-    password_button: "absolute inset-y-0 right-0 px-3 text-sm text-accent-text cursor-pointer"
+    password_button: "absolute inset-y-0 right-0 px-3 text-sm text-accent-text cursor-pointer " \
+                     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
   }.freeze
   WRAPPER_CLASSES = {
     vertical: "flex flex-col gap-1",
