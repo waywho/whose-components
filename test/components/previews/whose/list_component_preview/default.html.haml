@@ -1,0 +1,8 @@
+= list_component do |list|
+  - list.with_row(title: "Alice Smith", subtitle: "Admin", href: "#") do |row|
+    - row.with_leading do
+      %span.inline-flex.size-8.items-center.justify-center.rounded-full.bg-accent-soft.text-accent-text A
+    - row.with_trailing do
+      = badge_component(variant: :positive) { "Active" }
+  - list.with_row(title: "Bob Jones", subtitle: "Member")
+  - list.with_row(title: "Carol White")
