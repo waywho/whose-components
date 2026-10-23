@@ -35,6 +35,12 @@ class Whose::TooltipComponentTest < ViewComponent::TestCase
     refute_equal first, second
   end
 
+  def test_tooltip_id_has_the_whose_prefix
+    render_inline(Whose::TooltipComponent.new(text: "Help")) { "Save" }
+
+    assert_match(/\Awhose-tooltip-\h+\z/, page.find("[role=tooltip]", visible: :all)[:id])
+  end
+
   def test_tooltip_shows_on_hover_and_focus_only
     render_inline(Whose::TooltipComponent.new(text: "Help")) { "Save" }
 
