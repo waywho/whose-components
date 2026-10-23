@@ -18,9 +18,12 @@ module Docs
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    config.autoload_lib(ignore: %w[assets generators tasks])
 
     config.view_component.previews.paths << Rails.root.join("../test/components/previews").to_s
+    config.view_component.generate.sidecar = true
+    config.view_component.generate.preview = true
+    config.view_component.generate.preview_path = "test/components/previews"
     config.lookbook.project_name = "Whose Components"
   end
 end

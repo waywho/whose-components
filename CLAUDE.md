@@ -10,6 +10,7 @@ bin/setup --skip-server                # Install gems, build the CSS, prepare th
 bin/rails test                         # Run the gem's tests, with the docs app in docs/
 bin/rails test test/system             # Run the system tests
 bin/rails test test/components/whose/button_component_test.rb:12   # Run one test
+bin/rails generate whose:component Message --stimulus   # Add Whose::MessageComponent. Always add a component with this generator.
 bin/rubocop -A                         # Fix style
 bin/dev                                # Start the docs app, with Lookbook at /lookbook
 bin/rails restart                      # Restart the running docs app server, for example after a change in lib/
@@ -19,6 +20,8 @@ bin/rails restart                      # Restart the running docs app server, fo
 
 - `app/components/whose/`: the components. Each one has a Lookbook preview in
   `test/components/previews/`.
+- `docs/lib/generators/whose/`: the `whose:component` and `whose:stimulus`
+  generators. They are in the docs app, so the gem does not ship them to apps.
 - `app/controllers/whose/`, `app/views/whose/`: the auth controllers and views.
 - `app/assets/tailwind/whose_components/engine.css`: the theme tokens.
 - `lib/generators/whose/components/`: the install and views generators.
