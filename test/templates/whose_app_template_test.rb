@@ -11,7 +11,7 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   teardown { FileUtils.remove_entry(@tmp_dir) }
 
   test "writes the gems, settings and rules into a new app with sign-in" do
-    generate_app("WHOSE_AUTH" => "yes")
+    generate_app("--auth")
 
     gemfile = app_file("Gemfile")
     assert_includes gemfile, %(gem "haml-rails")
@@ -36,14 +36,23 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes test_helper, "include FactoryBot::Syntax::Methods"
     assert_not_includes test_helper, "fixtures :all"
 
+    assert_not File.exist?(File.join(app_path, "app/assets/stylesheets"))
+    assert_path_exists File.join(app_path, "app/views/pwa/manifest.json.erb")
+
     assert_includes app_file("CLAUDE.md"), "# Demo"
     assert_path_exists File.join(app_path, ".claude/skills/asd-ste100/SKILL.md")
   end
 
-  test "installs the gem from WHOSE_GEM_PATH and needs no prompt without sign-in" do
-    generate_app("WHOSE_AUTH" => "no", "WHOSE_GEM_PATH" => "/src/whose-components")
+  test "installs the gem from --component-gem-path and needs no prompt without sign-in" do
+    generate_app("--no-auth", "--component-gem-path", "/src/whose-components")
 
     assert_includes app_file("Gemfile"), %(gem "whose-components", path: "/src/whose-components")
+  end
+
+  test "reads a flag value in both forms" do
+    assert_equal "/src/gem", flag_value(%w[new demo --component-gem-path /src/gem], "component-gem-path")
+    assert_equal "/src/gem", flag_value(%w[new demo --component-gem-path=/src/gem], "component-gem-path")
+    assert_nil flag_value(%w[new demo], "component-gem-path")
   end
 
   test "reads the ref from each form of template URL" do
@@ -57,18 +66,75 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   end
 
   test "names the commands to run by hand when bundling is skipped" do
-    output = generate_app("WHOSE_AUTH" => "yes")
+    output = generate_app("--auth")
 
     assert_includes output, "bin/rails generate whose:components:install --auth"
     assert_includes output, "bin/rubocop -A"
     assert_includes output, "bin/rails db:create db:migrate"
   end
 
+  test "tells how to add a GitHub remote when bundling is skipped" do
+    output = generate_app("--no-auth")
+
+    assert_includes output, %(git commit -m "Initial commit")
+    assert_includes output, "https://github.com/new"
+    assert_includes output, "git remote add origin git@github.com:<your-account>/demo.git"
+    assert_includes output, "git push -u origin main"
+  end
+
+  test "leaves sign-in out with --no-auth" do
+    output = generate_app("--no-auth")
+
+    assert_includes output, "bin/rails generate whose:components:install, "
+  end
+
+  test "reads the root page from the --root flag" do
+    assert_equal "pages#home", root_option(%w[new demo --root pages#home])
+    assert_equal "landing#show", root_option(%w[new demo --root=landing#show])
+    assert_nil root_option(%w[new demo])
+    assert_raises(Thor::Error) { root_option(%w[new demo --root pages]) }
+  end
+
+  test "adds the root page that --root names, behind sign-in" do
+    generate_app("--auth", "--root", "landing#show")
+
+    assert_includes app_file("config/routes.rb"), %(root "landing#show")
+    assert_match(/class LandingController < ApplicationController\n  def show; end\nend/, app_file("app/controllers/landing_controller.rb"))
+    assert_path_exists File.join(app_path, "app/views/landing/show.html.haml")
+    assert_includes app_file("test/controllers/landing_controller_test.rb"), "assert_redirected_to new_session_url"
+  end
+
+  test "adds a root page that renders without sign-in" do
+    generate_app("--no-auth", "--root=pages#home")
+
+    assert_includes app_file("config/routes.rb"), %(root "pages#home")
+    assert_includes app_file("test/controllers/pages_controller_test.rb"), "assert_response :success"
+  end
+
+  test "adds no root page without --root" do
+    generate_app("--no-auth")
+
+    assert_not_includes app_file("config/routes.rb"), %(\n  root )
+    assert_not File.exist?(File.join(app_path, "app/controllers/pages_controller.rb"))
+  end
+
   private
 
   def template_ref(url)
-    source = File.read(TEMPLATE)[/^def whose_template_ref.*?^end$/m]
-    Object.new.tap { it.instance_eval(source) }.whose_template_ref(url)
+    template_methods.whose_template_ref(url)
+  end
+
+  def root_option(args)
+    template_methods.whose_root_option(args)
+  end
+
+  def flag_value(args, name)
+    template_methods.whose_flag_value(args, name)
+  end
+
+  def template_methods
+    source = File.read(TEMPLATE).scan(/^def .*?^end$/m).join("\n")
+    Object.new.tap { it.instance_eval(source) }
   end
 
   def app_path
@@ -79,16 +145,14 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     File.read(File.join(app_path, path))
   end
 
-  def generate_app(env)
-    previous_env = ENV.to_h.slice("WHOSE_AUTH", "WHOSE_GEM_PATH")
+  def generate_app(*flags)
+    previous_argv = ARGV.dup
     previous_dir = Dir.pwd
-    ENV.update(env)
-    capture_io do
-      Rails::Generators::AppGenerator.start([ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", "-m", TEMPLATE ])
-    end.first
+    args = [ app_path, "-d", "postgresql", "--css", "tailwind", "--skip-bundle", "--skip-git", *flags, "-m", TEMPLATE ]
+    ARGV.replace([ "new", *args ])
+    capture_io { Rails::Generators::AppGenerator.start(args) }.first
   ensure
     Dir.chdir(previous_dir)
-    env.each_key { ENV.delete(it) }
-    ENV.update(previous_env)
+    ARGV.replace(previous_argv)
   end
 end

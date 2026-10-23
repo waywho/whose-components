@@ -8,13 +8,40 @@ Make a new app with the app template:
 rails new myapp -d postgresql --css tailwind -m https://raw.githubusercontent.com/waywho/whose-components/v0.1.0/lib/templates/whose_app_template.rb
 ```
 
+With all the flags of the template, for an app with sign-in and a home page:
+
+```bash
+rails new myapp -d postgresql --css tailwind --auth --root pages#home \
+  -m https://raw.githubusercontent.com/waywho/whose-components/v0.1.0/lib/templates/whose_app_template.rb
+```
+
+### Short command with ~/.railsrc
+`rails new` reads default flags from `~/.railsrc`. To put the database, the CSS and the template URL there, run this once from a checkout of this repo:
+
+```bash
+bin/install-railsrc
+```
+
+Then make a new app with only the flags of the template:
+
+```bash
+rails new myapp --auth --root pages#home
+```
+
+- The URL in `~/.railsrc` names the version of your checkout. After a new release, run `git pull` and `bin/install-railsrc` again.
+- If `~/.railsrc` has other settings, the script stops. Add `--force` to replace the file.
+- Keep `--auth`, `--no-auth`, `--root` and `--component-gem-path` on the command line. The template does not see these flags in `~/.railsrc`.
+- To make an app without these defaults, add `--no-rc` to `rails new`.
+
 The URL names a ref: a tag, a branch, or `refs/tags/<tag>` or `refs/heads/<branch>`. The gem and the template files both come from that ref. A branch name that has a slash does not work.
+
+Add `--root pages#home` to make a root page. The template writes the route, the controller, the view and a controller test. Use any `controller#action`, for example `--root landing#show`. With sign-in, the page asks a signed-out visitor to sign in.
 
 If you pass `--skip-bundle`, the template prints the commands that you must run by hand.
 
-The template asks if the app needs sign-in. Set `WHOSE_AUTH=yes` or `WHOSE_AUTH=no` to answer without the prompt.
+The template asks if the app needs sign-in. Add `--auth` or `--no-auth` to answer without the prompt.
 
-Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from that path instead of GitHub.
+Add `--component-gem-path /path/to/whose-components` to install the gem from a local checkout instead of GitHub.
 
 ## Form layouts
 `whose_form_with` takes a `layout:` option. An unknown layout raises `ArgumentError`.
@@ -29,13 +56,28 @@ Set `WHOSE_GEM_PATH` to a local checkout of this gem to install the gem from tha
   = f.submit "Search"
 ```
 
-`whose_form_with` also takes `labels: :placeholder`. Text, email, password and other typed fields and text areas then show the label as the placeholder, and the label is visible only to screen readers. A placeholder that a field sets itself stays. Selects, file fields, checkboxes and toggles keep a visible label. The option works with all three layouts.
+`whose_form_with` also takes `labels: :placeholder`. Text, email, password and other typed fields and text areas then show the label as the placeholder. Only screen readers see the label. A placeholder that a field sets itself stays. Selects, file fields, checkboxes and toggles keep a visible label. The option works with all three layouts.
 
 ```haml
 = whose_form_with model: @search, url: search_path, layout: :inline, labels: :placeholder do |f|
   = f.text_field :query, label: "Search"
   = f.submit "Search"
 ```
+
+## Form fields
+The form builder wraps each field in a label, the theme classes, an optional hint and the first error message. Each field takes `label:` and `hint:`.
+
+- Typed fields: `text_field`, `email_field`, `password_field` (with a Show/Hide button), `number_field`, `telephone_field`, `url_field`, `search_field`, `date_field`, `datetime_field`, `datetime_local_field`, `time_field`, `month_field`, `week_field`, `color_field`, `range_field`, `text_area` and `file_field`.
+- Choices: `select` and `collection_select`. These take `label:` and `hint:` in the options hash.
+- `checkbox` and `toggle` put the label after the input.
+- `collection_radio_buttons` renders one group with one label, one hint and one error. A single `radio_button` gets only the radio style, with no label.
+
+```haml
+= whose_form_with model: @user do |f|
+  = f.collection_radio_buttons :role, [["Editor", "editor"], ["Admin", "admin"]], :last, :first, label: "Role", hint: "Admins can change settings."
+```
+
+The error messages are plain English, for example "Enter a value." in place of "can't be blank". The gem sets them under `en.errors.messages` in `config/locales/whose/errors.en.yml`. To change one, set the same key in your app's locale file.
 
 ## View helpers
 Each component has a view helper. The helper name is the component class name in snake case, without `Whose`. The helper takes the same arguments and block as the component.
@@ -86,7 +128,7 @@ With `--auth`, the generator also does these things:
 - Creates `app/models/user.rb`, which includes `Whose::Authenticatable`, and `test/factories/users.rb`.
 - Adds `include Whose::Authentication` to `ApplicationController`.
 - Adds `whose_authentication` to `config/routes.rb`. It defines the routes for `session`, `registration`, `confirmations` and `passwords`.
-- Adds a sign-out button to the nav in the layout.
+- Adds a sign-out button to the nav in the layout. Only a signed-in user sees it.
 
 ## Auth views
 To change the auth views, copy them into your app:
@@ -98,7 +140,7 @@ bin/rails generate whose:components:views
 The generator copies the folders `sessions`, `registrations`, `confirmations`, `passwords` and `auth_mailer` from the gem to `app/views/whose/`. Your copies replace the views of the gem.
 
 ## Auth hooks
-`Whose::Authentication` is included in `ApplicationController`. Override these private methods there to change the behaviour:
+The install generator includes `Whose::Authentication` in `ApplicationController`. Override these private methods there to change the behaviour:
 
 | Method | Default |
 | --- | --- |
