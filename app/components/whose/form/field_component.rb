@@ -31,8 +31,8 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     inline: "text-sm font-medium text-fg"
   }.freeze
 
-  def initialize(form:, method:, label:, hint:, layout:, inline: false, placeholder_label: false, value: nil)
-    @value = value
+  def initialize(form:, method:, label:, hint:, layout:, inline: false, group: false, placeholder_label: false)
+    @group = group
     @form = form
     @method = method
     @label = label
@@ -62,9 +62,18 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     "#{@form.object_name}_#{@method}_hint"
   end
 
+  def label_id
+    "#{@form.object_name}_#{@method}_label"
+  end
+
   def aria(caller_aria = {})
     describedby = [ caller_aria[:describedby], (hint_id if @hint), (error_id if error_message) ].compact.join(" ")
     caller_aria.merge(invalid: (true if error_message), describedby: describedby.presence).compact
+  end
+
+  def wrapper_attributes
+    attributes = { class: wrapper_classes, data: { field: true, layout: @layout } }
+    @group ? attributes.merge(role: "group", aria: { labelledby: label_id }) : attributes
   end
 
   def wrapper_classes

@@ -61,10 +61,17 @@ module Whose
       end
 
       def radio_button(method, tag_value, options = {})
+        super(method, tag_value, options.merge(class: [ field_classes[:radio], options[:class] ].compact))
+      end
+
+      def collection_radio_buttons(method, collection, value_method, text_method, options = {}, html_options = {})
         label, hint = options.values_at(:label, :hint)
-        field(method, label: label || tag_value.to_s.humanize, hint:, inline: true, value: tag_value) do |component|
-          super(method, tag_value, options.except(:label, :hint).merge(class: [ field_classes[:radio], options[:class] ].compact,
-                                                                       aria: component.aria(options[:aria] || {})))
+        field(method, label:, hint:, group: true) do |component|
+          radio_options = html_options.merge(class: [ field_classes[:radio], html_options[:class] ].compact,
+                                             aria: component.aria(html_options[:aria] || {}))
+          super(method, collection, value_method, text_method, options.except(:label, :hint)) do |radio|
+            tag.div(radio.radio_button(radio_options) + radio.label(class: "text-sm text-fg"), class: "flex items-center gap-2")
+          end
         end
       end
 
@@ -102,8 +109,8 @@ module Whose
         @options[:labels] || :visible
       end
 
-      def field(method, label:, hint:, inline: false, placeholder: false, value: nil, &block)
-        component = Whose::Form::FieldComponent.new(form: self, method:, label:, hint:, layout:, inline:, value:,
+      def field(method, label:, hint:, inline: false, placeholder: false, group: false, &block)
+        component = Whose::Form::FieldComponent.new(form: self, method:, label:, hint:, layout:, inline:, group:,
                                                     placeholder_label: placeholder && labels == :placeholder)
         render(component) { block.call(component) }
       end

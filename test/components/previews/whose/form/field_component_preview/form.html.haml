@@ -16,8 +16,7 @@
       = f.collection_select :role, [["Editor", "editor"], ["Admin", "admin"]], :last, :first, label: "Role from a collection"
       = f.file_field :avatar
       = f.check_box :newsletter, label: "Send me the newsletter"
-      = f.radio_button :role, "editor", label: "Editor"
-      = f.radio_button :role, "admin", label: "Admin"
+      = f.collection_radio_buttons :role, [["Editor", "editor"], ["Admin", "admin"]], :last, :first, label: "Role from radios", hint: "Admins can change settings."
       = f.toggle :notifications, label: "Notifications", hint: "Send an email for each new comment."
       %div
         = f.submit "Save"

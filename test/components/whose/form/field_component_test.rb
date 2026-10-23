@@ -198,26 +198,50 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_selector "select[aria-invalid=true][aria-describedby~=person_name_error]"
   end
 
-  def test_radio_button_puts_label_after_input
-    render_form(Person.new) { |form| form.radio_button(:name, "ann", label: "Ann Lee") }
+  def test_radio_button_is_styled_without_a_field_wrapper
+    render_form(Person.new) { |form| form.radio_button(:name, "ann") }
 
-    assert_selector "[data-field] input[type=radio]#person_name_ann + label[for=person_name_ann]", text: "Ann Lee"
-    assert_selector "input[type=radio].accent-accent"
+    assert_selector "input[type=radio]#person_name_ann.accent-accent"
+    assert_no_selector "[data-field]"
   end
 
-  def test_radio_button_label_defaults_to_the_humanized_value
-    render_form(Person.new) { |form| form.radio_button(:name, "ann_lee") }
+  def test_radio_group_is_labelled_by_its_label_and_puts_each_label_after_its_radio
+    render_form(Person.new) do |form|
+      form.collection_radio_buttons(:name, [ %w[Ann ann], %w[Bob bob] ], :last, :first, { label: "Who" })
+    end
 
-    assert_selector "label[for=person_name_ann_lee]", text: "Ann lee"
+    assert_selector "[data-field][role=group][aria-labelledby=person_name_label]"
+    assert_selector "#person_name_label", text: "Who"
+    assert_selector "input[type=radio]#person_name_ann.accent-accent + label[for=person_name_ann]", text: "Ann"
+    assert_selector "input[type=radio]#person_name_bob + label[for=person_name_bob]", text: "Bob"
   end
 
-  def test_radio_button_marks_invalid_input
+  def test_radio_group_shows_hint_and_error_once_and_every_radio_points_to_them
     person = Person.new
     person.errors.add(:name, "is invalid")
 
-    render_form(person) { |form| form.radio_button(:name, "ann") }
+    render_form(person) do |form|
+      form.collection_radio_buttons(:name, [ %w[Ann ann], %w[Bob bob] ], :last, :first, { hint: "Pick one" })
+    end
 
-    assert_selector "input[type=radio][aria-invalid=true][aria-describedby~=person_name_error]"
+    assert_selector "#person_name_hint", text: "Pick one", count: 1
+    assert_selector "#person_name_error", text: "is invalid", count: 1
+    assert_selector "input[type=radio][aria-invalid=true][aria-describedby='person_name_hint person_name_error']", count: 2
+  end
+
+  def test_field_outside_a_group_has_no_group_role
+    render_form(Person.new) { |form| form.text_field(:name) }
+
+    assert_no_selector "[data-field][role]"
+    assert_no_selector "[data-field][aria-labelledby]"
+  end
+
+  def test_radio_group_keeps_a_visible_label_in_placeholder_mode
+    render_form(Person.new, labels: :placeholder) do |form|
+      form.collection_radio_buttons(:name, [ %w[Ann ann] ], :last, :first)
+    end
+
+    assert_selector "#person_name_label:not(.sr-only)", text: "Name"
   end
 
   def test_input_keeps_caller_describedby_and_joins_hint_and_error_ids
