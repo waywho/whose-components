@@ -3,10 +3,16 @@
 require "shellwords"
 require "tmpdir"
 
+def whose_template_ref(url)
+  url[%r{waywho/whose-components/(?:refs/(?:heads|tags)/)?([^/]+)/lib/templates/}, 1]
+end
+
+template_ref = whose_template_ref(__FILE__)
+
 if __FILE__.match?(%r{\Ahttps?://})
   gem_checkout = Dir.mktmpdir("whose-components-")
   at_exit { FileUtils.remove_entry(gem_checkout) }
-  git clone: [ "--quiet", "--depth=1", "https://github.com/waywho/whose-components.git", gem_checkout ].shelljoin
+  git clone: [ "--quiet", "--depth=1", *("--branch=#{template_ref}" if template_ref), "https://github.com/waywho/whose-components.git", gem_checkout ].shelljoin
   source_paths.unshift(File.join(gem_checkout, "lib/templates/app"))
 else
   source_paths.unshift(File.join(__dir__, "app"))
@@ -19,6 +25,8 @@ gem "view_component"
 gem "pagy", "~> 43"
 if ENV["WHOSE_GEM_PATH"]
   gem "whose-components", path: ENV["WHOSE_GEM_PATH"]
+elsif template_ref
+  gem "whose-components", github: "waywho/whose-components", ref: template_ref
 else
   gem "whose-components", github: "waywho/whose-components"
 end
@@ -62,7 +70,12 @@ directory ".claude", ".claude"
 route %(mount Lookbook::Engine, at: "/lookbook" if Rails.env.development?)
 
 after_bundle do
-  next if options[:skip_bundle]
+  if options[:skip_bundle]
+    say "Bundling was skipped. Run these commands in the app: bundle install, " \
+        "bin/rails generate whose:components:install#{" --auth" if auth}, bin/rubocop -A, " \
+        "bin/rails db:create db:migrate, then make the first commit."
+    next
+  end
 
   generate "whose:components:install", *("--auth" if auth)
   run "bin/rubocop -A"
