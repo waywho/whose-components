@@ -73,6 +73,8 @@ YAML
 uncomment_lines "config/environments/development.rb", /config\.generators\.apply_rubocop_autocorrect_after_generate!/
 environment "config.action_mailer.delivery_method = :letter_opener", env: "development"
 
+remove_dir "app/assets/stylesheets"
+
 gsub_file "test/test_helper.rb", /^ *# Setup all fixtures.*\n *fixtures :all\n/, "    include FactoryBot::Syntax::Methods\n"
 
 template "CLAUDE.md.tt", "CLAUDE.md"

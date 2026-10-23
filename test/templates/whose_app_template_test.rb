@@ -36,6 +36,9 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes test_helper, "include FactoryBot::Syntax::Methods"
     assert_not_includes test_helper, "fixtures :all"
 
+    assert_not File.exist?(File.join(app_path, "app/assets/stylesheets"))
+    assert_path_exists File.join(app_path, "app/views/pwa/manifest.json.erb")
+
     assert_includes app_file("CLAUDE.md"), "# Demo"
     assert_path_exists File.join(app_path, ".claude/skills/asd-ste100/SKILL.md")
   end
