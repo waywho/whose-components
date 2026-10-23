@@ -1,4 +1,4 @@
-%nav{ class: style[:root], aria: { label: t(".main") } }
+%nav{ attributes }
   - if brand? && menu?
     .shrink-0.font-semibold{ data: { slot: "brand" } }= brand
   %ul{ class: style[:list] }

@@ -6,6 +6,10 @@ class Whose::AuthMailer < ::ApplicationMailer
     mail to: user.email_address
   end
 
+  def account_exists(user)
+    mail to: user.email_address
+  end
+
   def password_reset(user)
     @token = user.password_reset_token
     mail to: user.email_address

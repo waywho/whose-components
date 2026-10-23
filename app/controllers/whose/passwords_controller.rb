@@ -5,7 +5,7 @@ class Whose::PasswordsController < ::ApplicationController
 
   allow_unauthenticated_access
   rate_limit to: 10, within: 3.minutes, only: :create,
-             with: -> { redirect_to new_password_path, alert: t("whose.sessions.rate_limited") }
+             with: -> { redirect_to new_password_path, alert: t("whose.rate_limited") }
   before_action :set_user_by_token, only: %i[edit update]
 
   def new; end
@@ -20,8 +20,7 @@ class Whose::PasswordsController < ::ApplicationController
 
   def update
     attributes = params.expect(user: %i[password password_confirmation])
-    if attributes[:password].present? && @user.update(attributes)
-      @user.sessions.destroy_all
+    if attributes[:password].present? && User.transaction { @user.update(attributes) && @user.sessions.destroy_all }
       redirect_to new_session_path, notice: t("whose.passwords.updated")
     else
       @user.errors.add(:password, :blank) if attributes[:password].blank?
@@ -33,7 +32,7 @@ class Whose::PasswordsController < ::ApplicationController
 
   def set_user_by_token
     @user = User.find_by_password_reset_token!(params[:token])
-  rescue ActiveSupport::MessageVerifier::InvalidSignature
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound
     redirect_to new_password_path, alert: t("whose.passwords.invalid")
   end
 end

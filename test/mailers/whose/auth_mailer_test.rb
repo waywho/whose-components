@@ -15,6 +15,19 @@ class Whose::AuthMailerTest < ActionMailer::TestCase
     assert_includes mail.html_part.body.to_s, "http://example.com/confirmations/#{token}"
   end
 
+  test "account exists sends sign in and password reset links" do
+    user = create(:user, email_address: "ann@example.com")
+
+    mail = Whose::AuthMailer.account_exists(user)
+
+    assert_equal [ "ann@example.com" ], mail.to
+    assert_equal I18n.t("whose.auth_mailer.account_exists.subject"), mail.subject
+    [ mail.text_part, mail.html_part ].each do
+      assert_includes it.body.to_s, "http://example.com/session/new"
+      assert_includes it.body.to_s, "http://example.com/passwords/new"
+    end
+  end
+
   test "password reset sends a link that finds the user" do
     user = create(:user, email_address: "ann@example.com")
 

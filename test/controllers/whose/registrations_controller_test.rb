@@ -19,12 +19,29 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil cookies[:session_id]
   end
 
-  test "sign up with taken email is unprocessable" do
+  test "sign up with taken email gives the same response as a new email" do
+    owner = create(:user, email_address: "ann@example.com")
+    responses = [ "bob@example.com", "ANN@Example.com" ].map do |email_address|
+      sign_up(email_address:)
+      [ response.status, response.location, flash[:notice] ]
+    end
+
+    assert_equal 1, responses.uniq.size
+    assert_equal [ 302, new_session_url, I18n.t("whose.registrations.created") ], responses.first
+    assert_equal 2, User.count
+    assert_enqueued_emails 2
+    assert_enqueued_email_with Whose::AuthMailer, :account_exists, args: [ owner ]
+  end
+
+  test "invalid sign up with taken email gives the same response as with a new email" do
+    sign_up(first_name: "", password_confirmation: "different123")
+    new_email_response = [ response.status, response.body ]
     create(:user, email_address: "ann@example.com")
 
-    assert_no_difference("User.count") { sign_up(email_address: "ANN@Example.com") }
+    assert_no_difference("User.count") { sign_up(first_name: "", password_confirmation: "different123") }
 
-    assert_response :unprocessable_content
+    assert_equal 422, new_email_response.first
+    assert_equal new_email_response, [ response.status, response.body ]
     assert_no_enqueued_emails
   end
 

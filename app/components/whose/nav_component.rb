@@ -24,9 +24,17 @@ class Whose::NavComponent < ViewComponent::Base
   renders_one :actions
   renders_many :items, Whose::Nav::ItemComponent
 
-  def initialize(orientation: :horizontal)
+  def initialize(orientation: :horizontal, **html_attributes)
+    @html_attributes = html_attributes
     @orientation = orientation.to_sym
     raise ArgumentError, "Unknown orientation: #{orientation}. Use :horizontal, :vertical or :bottom." unless ORIENTATION_STYLES.key?(@orientation)
+  end
+
+  def attributes
+    @html_attributes.merge(
+      class: [ style[:root], @html_attributes[:class] ].compact,
+      aria: { label: t(".main") }.merge(@html_attributes[:aria] || {})
+    )
   end
 
   def spacer_style

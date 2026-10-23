@@ -32,4 +32,8 @@ bin/rails restart                      # Restart the running docs app server, fo
 The rules for new apps also apply to this repo, from the Workflow section to
 the end. The only difference: the Commands above replace the app commands.
 
+- The auth flow never shows whether an email address has an account. Sign-in,
+  sign-up, confirmation resend and password reset give the same status, page
+  and message for a known and an unknown address.
+
 @lib/templates/app/CLAUDE.md.tt

@@ -1,6 +1,6 @@
-%div{ data: { controller: "whose-dialog", action: "click->whose-dialog#backdropClose" } }
+%div{ attributes }
   %span.contents{ data: { action: "click->whose-dialog#open" } }= trigger
-  %dialog{ class: "m-auto w-full max-w-lg rounded-box border border-border bg-surface p-0 font-sans text-fg shadow-xl backdrop:bg-black/50",
+  %dialog{ class: "m-auto w-full max-w-lg rounded-box border border-border bg-surface p-0 font-sans text-fg shadow-xl backdrop:bg-backdrop",
            aria: { labelledby: @title_id },
            data: { whose_dialog_target: "dialog" } }
     .flex.flex-col.gap-4.p-6

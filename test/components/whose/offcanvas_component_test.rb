@@ -38,6 +38,12 @@ class Whose::OffcanvasComponentTest < ViewComponent::TestCase
     assert_selector "dialog[aria-labelledby='#{title_id}']", visible: :all
   end
 
+  def test_offcanvas_passes_html_attributes_through
+    render_offcanvas(id: "x", data: { turbo_frame: "y" }, class: "extra")
+
+    assert_selector "div#x.extra[data-controller=whose-dialog][data-turbo-frame='y']"
+  end
+
   def test_side_defaults_to_left
     render_offcanvas
 

@@ -11,9 +11,16 @@ class Whose::TooltipComponent < ViewComponent::Base
 
   attr_reader :text, :id, :placement_classes
 
-  def initialize(text:, placement: :top)
+  BASE_CLASSES = "group relative inline-flex w-fit"
+
+  def initialize(text:, placement: :top, **html_attributes)
     @text = text
+    @html_attributes = html_attributes
     @placement_classes = PLACEMENTS.fetch(placement) { raise ArgumentError, "Unknown placement: #{placement.inspect}" }
     @id = "tooltip-#{SecureRandom.hex(4)}"
+  end
+
+  def attributes
+    @html_attributes.merge(class: [ BASE_CLASSES, @html_attributes[:class] ].compact)
   end
 end

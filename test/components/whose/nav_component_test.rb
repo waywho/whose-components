@@ -63,6 +63,12 @@ class Whose::NavComponentTest < ViewComponent::TestCase
     assert_selector "nav[aria-label=Main]"
   end
 
+  def test_nav_passes_html_attributes_through
+    render_inline(Whose::NavComponent.new(id: "x", data: { turbo_permanent: true }, class: "extra"))
+
+    assert_selector "nav#x.extra.flex[data-turbo-permanent][aria-label=Main]"
+  end
+
   def test_unknown_orientation_raises
     assert_raises(ArgumentError) { Whose::NavComponent.new(orientation: :diagonal) }
   end
