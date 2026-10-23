@@ -33,6 +33,17 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_enqueued_email_with Whose::AuthMailer, :account_exists, args: [ owner ]
   end
 
+  test "sign up with the email of an unconfirmed user sends a new confirmation" do
+    owner = create(:user, :unconfirmed, email_address: "ann@example.com")
+
+    assert_no_difference("User.count") { sign_up }
+
+    assert_redirected_to new_session_path
+    assert_equal I18n.t("whose.registrations.created"), flash[:notice]
+    assert_enqueued_emails 1
+    assert_enqueued_email_with Whose::AuthMailer, :confirmation, args: [ owner ]
+  end
+
   test "invalid sign up with taken email gives the same response as with a new email" do
     sign_up(first_name: "", password_confirmation: "different123")
     new_email_response = [ response.status, response.body ]
