@@ -1,0 +1,17 @@
+en:
+  errors:
+    messages:
+      blank: Enter a value.
+      taken: This value is already in use.
+      invalid: Enter a valid value.
+      too_short:
+        one: Use at least %{count} character.
+        other: Use at least %{count} characters.
+      too_long:
+        one: Use at most %{count} character.
+        other: Use at most %{count} characters.
+      confirmation: Enter the same value as %{attribute}.
+      inclusion: Choose a value from the list.
+      not_a_number: Enter a number.
+      greater_than: Enter a number greater than %{count}.
+      less_than: Enter a number less than %{count}.
