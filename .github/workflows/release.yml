@@ -36,4 +36,4 @@ jobs:
       - name: Update the changelog and release
         uses: waywho/pr-to-release@v1
         with:
-          version-command: bundle exec bump $RELEASE_LEVEL --no-commit
+          version-command: bundle config set --local deployment false && bundle exec bump $RELEASE_LEVEL --no-commit
