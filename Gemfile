@@ -20,3 +20,5 @@ end
 group :development do
   gem "letter_opener"
 end
+
+gem "bump", "~> 0.10.0", group: :development
