@@ -90,4 +90,11 @@ To add a Stimulus Components package:
   sign-up, confirmation resend and password reset give the same status, page
   and message for a known and an unknown address.
 
+### Pull requests
+
+- A pull request description uses the headings from
+  `.github/pull_request_template.md`. A pull request that releases gets
+  exactly one `major`, `minor` or `patch` label. A pull request that does not
+  release gets no release label.
+
 @lib/templates/app/CLAUDE.md.tt
