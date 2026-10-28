@@ -14,7 +14,8 @@ bin/brakeman                 # Scan for security problems
 ## Workflow
 
 - Before you do work, say how to verify it.
-- After a change, run the related tests and `bin/rubocop`.
+- After a change, run the related tests and `bin/rubocop`. Run them again just
+  before each commit, even when the code did not change since the last run.
 - Never commit to `main`. Work on a feature branch.
 - Never commit unless the owner asks. One commit for each completed task.
 - A commit message is one line: a subject and nothing else.
@@ -28,7 +29,8 @@ Use `create` and `build` directly, never `FactoryBot.create`.
 
 ### Work test-first
 
-Before you change code, run only a new test.
+Before you change code, run only a new test. This rule wins over any skill that
+runs the full suite first, such as `superpowers:using-git-worktrees`.
 
 - **An existing test covers the change, and the behaviour stays the same:**
   do not run it first. Make the change, then run that test.
