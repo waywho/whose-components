@@ -109,8 +109,11 @@ remove it. Never add `sleep`, a longer wait, or a retry.
 - Prevent N+1 queries with `includes`. Add indexes for frequent queries.
 - Order by `id`, not `created_at`.
 - Use `:unprocessable_content` (422), not `:unprocessable_entity`.
-- UI: use the `whose-components` components before you write new markup. Check
-  Lookbook (`/lookbook`) for the existing pattern.
+- UI: build every view with `whose-components` components wherever one exists:
+  buttons, forms and fields, cards, alerts, layout. Check Lookbook
+  (`/lookbook`) for the existing pattern. Never hand-write Tailwind markup for
+  something that `whose-components` already has. If a view needs a component
+  that does not exist, use the closest one and report the gap.
 - A new layout for a page never removes a function. Every link, action and
   filter on the old page must exist on the new page.
 - After a UI change, click through it in a browser (Playwright) before you say
