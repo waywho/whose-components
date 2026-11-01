@@ -20,6 +20,14 @@ module Whose
         app.config.assets.paths << root.join("app/javascript")
         app.config.assets.paths << root.join("vendor/javascript")
       end
+
+      # engine.css is a Tailwind source, not an asset that the pipeline serves.
+      # Propshaft would compile it and warn about its font URL, which resolves
+      # against the built tailwind.css instead. tailwindcss-rails excludes the
+      # app's own Tailwind source the same way.
+      initializer "whose_components.exclude_tailwind_source", before: "propshaft.append_assets_path" do |app|
+        app.config.assets.excluded_paths&.push(root.join("app/assets/tailwind"))
+      end
     end
   end
 end
