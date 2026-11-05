@@ -2,4 +2,6 @@
 
 class User < ApplicationRecord
   include Whose::Authenticatable
+
+  before_create { self.id = SecureRandom.uuid_v7 if id.blank? }
 end
