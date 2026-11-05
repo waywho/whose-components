@@ -90,6 +90,9 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
 
     assert_migration "db/migrate/create_users.rb" do |migration|
       assert_match(/\A# frozen_string_literal: true\n/, migration)
+      assert_match(/create_table :users, id: false/, migration)
+      assert_match(/t\.uuid :id, null: false, primary_key: true, default: ->/, migration)
+      assert_match(/gen_random_uuid_v7/, migration)
       assert_match(/t\.string :email_address, null: false/, migration)
       assert_match(/t\.string :password_digest, null: false/, migration)
       assert_match(/t\.datetime :confirmed_at/, migration)
@@ -102,7 +105,7 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
       assert_match(/\A# frozen_string_literal: true\n/, migration)
       assert_match(/class CreateWhoseSessions /, migration)
       assert_match(/create_table :whose_sessions do/, migration)
-      assert_match(/t\.references :user, null: false, foreign_key: true/, migration)
+      assert_match(/t\.references :user, null: false, foreign_key: true, type: :uuid/, migration)
       assert_match(/t\.string :ip_address/, migration)
       assert_match(/t\.string :user_agent/, migration)
       assert_match(/t\.timestamps/, migration)
