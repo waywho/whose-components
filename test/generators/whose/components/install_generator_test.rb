@@ -85,14 +85,21 @@ class Whose::Components::Generators::InstallGeneratorTest < Rails::Generators::T
     assert_equal 1, File.read(File.join(destination_root, "app/javascript/controllers/index.js")).scan("whose/controllers").size
   end
 
+  test "auth option makes the user id a UUIDv7 in Ruby" do
+    run_generator %w[--auth]
+
+    assert_migration "db/migrate/create_users.rb" do |migration|
+      assert_match(/create_table :users, id: :uuid do/, migration)
+      assert_no_match(/gen_random_uuid_v7/, migration)
+    end
+    assert_file "app/models/user.rb", /before_create \{ self\.id = SecureRandom\.uuid_v7 if id\.blank\? \}/
+  end
+
   test "auth option adds migrations model routes and include" do
     run_generator %w[--auth]
 
     assert_migration "db/migrate/create_users.rb" do |migration|
       assert_match(/\A# frozen_string_literal: true\n/, migration)
-      assert_match(/create_table :users, id: false/, migration)
-      assert_match(/t\.uuid :id, null: false, primary_key: true, default: ->/, migration)
-      assert_match(/gen_random_uuid_v7/, migration)
       assert_match(/t\.string :email_address, null: false/, migration)
       assert_match(/t\.string :password_digest, null: false/, migration)
       assert_match(/t\.datetime :confirmed_at/, migration)
