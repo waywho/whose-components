@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "stimulus-rails"
   spec.add_dependency "turbo-rails"
   spec.add_dependency "bcrypt", "~> 3.1"
+  spec.add_dependency "tailwind_merge", "~> 1.5"
 end

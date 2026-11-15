@@ -61,13 +61,13 @@ module Whose
       end
 
       def radio_button(method, tag_value, options = {})
-        super(method, tag_value, options.merge(class: [ field_classes[:radio], options[:class] ].compact))
+        super(method, tag_value, options.merge(class: Whose.merge_classes(field_classes[:radio], options[:class])))
       end
 
       def collection_radio_buttons(method, collection, value_method, text_method, options = {}, html_options = {})
         label, hint = options.values_at(:label, :hint)
         field(method, label:, hint:, group: true) do |component|
-          radio_options = html_options.merge(class: [ field_classes[:radio], html_options[:class] ].compact,
+          radio_options = html_options.merge(class: Whose.merge_classes(field_classes[:radio], html_options[:class]),
                                              aria: component.aria(html_options[:aria] || {}))
           super(method, collection, value_method, text_method, options.except(:label, :hint)) do |radio|
             tag.div(radio.radio_button(radio_options) + radio.label(class: "text-sm text-fg"), class: "flex items-center gap-2")
@@ -117,14 +117,14 @@ module Whose
 
       def input_options(component, options, extra_class = nil)
         placeholder = component.placeholder_label? ? { placeholder: component.label_text } : {}
-        placeholder.merge(options).merge(class: [ field_classes[:input], extra_class, options[:class] ].compact,
+        placeholder.merge(options).merge(class: Whose.merge_classes(field_classes[:input], extra_class, options[:class]),
                                          aria: component.aria(options[:aria] || {}))
       end
 
       def styled_checkbox(attribute, options, checked_value, unchecked_value, css_class)
         label, hint = options.values_at(:label, :hint)
         field(attribute, label:, hint:, inline: true) do |component|
-          checkbox_options = options.except(:label, :hint).merge(class: [ css_class, options[:class] ].compact,
+          checkbox_options = options.except(:label, :hint).merge(class: Whose.merge_classes(css_class, options[:class]),
                                                                  aria: component.aria(options[:aria] || {}))
           ActionView::Helpers::FormBuilder.instance_method(:checkbox)
                                           .bind_call(self, attribute, checkbox_options, checked_value, unchecked_value)

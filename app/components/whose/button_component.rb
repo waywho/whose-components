@@ -29,7 +29,7 @@ class Whose::ButtonComponent < ViewComponent::Base
   end
 
   def attributes
-    @html_attributes.merge(class: [ BASE_CLASSES, VARIANT_CLASSES[@variant], SIZE_CLASSES[@size], width_class, @html_attributes[:class] ].compact)
+    @html_attributes.merge(class: Whose.merge_classes(BASE_CLASSES, VARIANT_CLASSES[@variant], SIZE_CLASSES[@size], width_class, @html_attributes[:class]))
   end
 
   private

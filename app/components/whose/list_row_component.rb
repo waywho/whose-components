@@ -14,6 +14,6 @@ class Whose::ListRowComponent < ViewComponent::Base
   end
 
   def attributes
-    @html_attributes.merge(class: [ BASE_CLASSES, @html_attributes[:class] ].compact)
+    @html_attributes.merge(class: Whose.merge_classes(BASE_CLASSES, @html_attributes[:class]))
   end
 end

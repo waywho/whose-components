@@ -82,6 +82,13 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_selector "[data-field] textarea.rounded-box"
   end
 
+  def test_caller_class_replaces_a_builder_class_that_conflicts
+    render_form(Person.new) { it.textarea(:name, class: "font-mono") }
+
+    assert_selector "[data-field] textarea.font-mono"
+    assert_no_selector "[data-field] textarea.font-sans"
+  end
+
   def test_text_area_alias_renders_field_wrapper
     render_form(Person.new) { it.text_area(:name) }
 
