@@ -13,7 +13,7 @@ class Whose::CardComponent < ViewComponent::Base
 
   def attributes
     @html_attributes.merge(
-      class: [ BASE_CLASSES, @html_attributes[:class] ].compact,
+      class: Whose.merge_classes(BASE_CLASSES, @html_attributes[:class]),
       data: { card: true }.merge(@html_attributes[:data] || {})
     )
   end

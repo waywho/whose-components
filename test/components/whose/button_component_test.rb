@@ -34,6 +34,13 @@ class Whose::ButtonComponentTest < ViewComponent::TestCase
     assert_selector "button.mt-4.bg-accent"
   end
 
+  def test_caller_class_replaces_a_component_class_that_conflicts
+    render_inline(Whose::ButtonComponent.new(class: "bg-negative")) { "Save" }
+
+    assert_selector "button.bg-negative", text: "Save"
+    assert_no_selector "button.bg-accent"
+  end
+
   def test_button_is_as_wide_as_its_content_by_default
     render_inline(Whose::ButtonComponent.new) { "Save" }
 

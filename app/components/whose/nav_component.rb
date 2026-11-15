@@ -32,7 +32,7 @@ class Whose::NavComponent < ViewComponent::Base
 
   def attributes
     @html_attributes.merge(
-      class: [ style[:root], @html_attributes[:class] ].compact,
+      class: Whose.merge_classes(style[:root], @html_attributes[:class]),
       aria: { label: t(".main") }.merge(@html_attributes[:aria] || {})
     )
   end
