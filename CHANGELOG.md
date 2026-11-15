@@ -6,8 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.0] - 2026-11-15
 ### Changed
 - A class that you pass to a component or a form field replaces a component class that sets the same property.
+- Push the release with a deploy key
 
 ### Removed
 - The `data-flash-type` attribute on flash messages. Select a message by its role: `alert` for an alert, `status` for the other types.
@@ -25,5 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An app template for `rails new` with the flags `--auth`, `--no-auth`, `--root controller#action` and `--component-gem-path`. It makes the first commit and prints the GitHub steps.
 - `bin/install-railsrc` writes the template defaults into `~/.railsrc`.
 
-[Unreleased]: https://github.com/waywho/whose-components/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/waywho/whose-components/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/waywho/whose-components/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/waywho/whose-components/releases/tag/v0.1.0
