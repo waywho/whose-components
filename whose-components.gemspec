@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,config,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+    `git ls-files -z`.split("\x0").grep(%r{\A((app|config|lib|vendor)/|(MIT-LICENSE|Rakefile|README\.md)\z)})
   end
 
   spec.add_dependency "rails", "~> 8.1"
