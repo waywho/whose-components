@@ -44,7 +44,7 @@ if gem_path
 elsif template_ref
   gem "whose-components", github: "waywho/whose-components", ref: template_ref
 else
-  gem "whose-components", github: "waywho/whose-components"
+  gem "whose-components"
 end
 
 gem_group :development, :test do

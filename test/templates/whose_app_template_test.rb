@@ -10,6 +10,12 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
   setup { @tmp_dir = Dir.mktmpdir("whose-app-template-") }
   teardown { FileUtils.remove_entry(@tmp_dir) }
 
+  test "takes whose-components from RubyGems" do
+    generate_app("--no-auth")
+
+    assert_match(/^gem "whose-components"$/, app_file("Gemfile"))
+  end
+
   test "writes the gems, settings and rules into a new app with sign-in" do
     generate_app("--auth")
 
@@ -17,7 +23,6 @@ class WhoseAppTemplateTest < ActiveSupport::TestCase
     assert_includes gemfile, %(gem "haml-rails")
     assert_includes gemfile, %(gem "view_component")
     assert_includes gemfile, %(gem "pagy", "~> 43")
-    assert_includes gemfile, %(gem "whose-components", github: "waywho/whose-components")
     assert_match(/group :development, :test do.*gem "factory_bot_rails".*gem "faker"/m, gemfile)
     assert_match(/group :development do\n  gem "lookbook"\n  gem "letter_opener"/, gemfile)
 
