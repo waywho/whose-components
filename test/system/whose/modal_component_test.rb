@@ -15,7 +15,7 @@ class Whose::ModalComponentSystemTest < ApplicationSystemTestCase
     click_button "Delete person"
     assert_selector "dialog[open]"
 
-    page.driver.browser.action.move_to_location(5, 5).click.perform
+    page.driver.browser.mouse.click(x: 5, y: 5)
     assert_no_selector "dialog[open]", visible: :all
   end
 end

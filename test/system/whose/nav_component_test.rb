@@ -4,7 +4,7 @@ require "application_system_test_case"
 
 class Whose::NavComponentSystemTest < ApplicationSystemTestCase
   def test_menu_button_opens_nav_on_small_screen
-    page.driver.browser.manage.window.resize_to(375, 800)
+    page.current_window.resize_to(375, 800)
     visit "/rails/view_components/whose/nav_component/horizontal"
 
     assert_no_selector "dialog a", visible: :visible
