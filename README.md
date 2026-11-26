@@ -97,10 +97,10 @@ Each component has a view helper. The helper name is the component class name in
 `whose_form_with` wraps `form_with` and is not a component.
 
 ## Installation
-The gem is not on RubyGems. Add it to your Gemfile from GitHub:
+Add the gem to your Gemfile:
 
 ```ruby
-gem "whose-components", github: "waywho/whose-components"
+gem "whose-components", "~> 0.3"
 ```
 
 Then run:
