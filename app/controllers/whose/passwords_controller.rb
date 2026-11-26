@@ -11,7 +11,7 @@ class Whose::PasswordsController < ::ApplicationController
   def new; end
 
   def create
-    user = User.find_by(email_address: params.expect(:email_address))
+    user = User.find_by(email: params.expect(:email))
     Whose::AuthMailer.password_reset(user).deliver_later if user
     redirect_to new_session_path, notice: t("whose.passwords.sent")
   end

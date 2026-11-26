@@ -3,7 +3,7 @@
 class DashboardsController < ApplicationController
   def show
     render inline: <<~ERB, layout: "application"
-      <h1><%= current_user.email_address %></h1>
+      <h1><%= current_user.email %></h1>
       <%= button_to "Sign out", session_path, method: :delete %>
     ERB
   end
@@ -17,7 +17,7 @@ ApplicationController.class_eval do
   end
 
   def sign_up_params
-    params.expect(user: %i[first_name last_name email_address password password_confirmation nickname])
+    params.expect(user: %i[first_name last_name email password password_confirmation nickname])
   end
 end
 

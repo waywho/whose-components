@@ -9,7 +9,7 @@
         = form.text_field :first_name, label: t(".first_name"), required: true, autofocus: true,
           autocomplete: "given-name"
         = form.text_field :last_name, label: t(".last_name"), autocomplete: "family-name"
-        = form.email_field :email_address, label: t(".email_address"), required: true, autocomplete: "username"
+        = form.email_field :email, label: t(".email"), required: true, autocomplete: "username"
         = form.password_field :password, label: t(".password"), required: true, autocomplete: "new-password"
         = form.password_field :password_confirmation, label: t(".password_confirmation"), required: true,
           autocomplete: "new-password"

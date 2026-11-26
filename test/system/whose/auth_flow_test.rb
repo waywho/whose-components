@@ -25,7 +25,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
     assert_selector "[role=status]", text: I18n.t("whose.confirmations.confirmed")
     assert_current_path dashboard_path
     assert_text "ann@example.com"
-    assert_equal "Ann", User.find_by!(email_address: "ann@example.com").name
+    assert_equal "Ann", User.find_by!(email: "ann@example.com").name
   end
 
   def test_sign_up_without_first_name_shows_the_plain_error_message
@@ -40,7 +40,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
   end
 
   def test_wrong_password_shows_one_alert_and_right_password_signs_in
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
 
     sign_in_with "ann@example.com", "wrong-password"
 
@@ -55,7 +55,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
   end
 
   def test_unconfirmed_user_can_open_the_resend_page
-    create(:user, :unconfirmed, email_address: "bob@example.com")
+    create(:user, :unconfirmed, email: "bob@example.com")
 
     sign_in_with "bob@example.com", "password123"
 
@@ -67,7 +67,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
   end
 
   def test_confirmed_user_does_not_see_the_resend_link
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
 
     sign_in_with "ann@example.com", "wrong-password"
 
@@ -85,7 +85,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
   end
 
   def test_reset_password_by_mail_link_then_sign_in_with_the_new_password
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
 
     visit new_password_path
     fill_in "Email address", with: "ann@example.com"
@@ -106,7 +106,7 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
   end
 
   def test_sign_out_ends_the_session
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
     sign_in_with "ann@example.com", "password123"
     assert_current_path dashboard_path
 
@@ -120,9 +120,9 @@ class Whose::AuthFlowSystemTest < ApplicationSystemTestCase
 
   private
 
-  def sign_in_with(email_address, password)
+  def sign_in_with(email, password)
     visit new_session_path
-    fill_in "Email address", with: email_address
+    fill_in "Email address", with: email
     fill_in "Password", with: password
     click_button "Sign in"
   end

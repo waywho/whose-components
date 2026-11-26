@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = create(:user, email_address: "ann@example.com") }
+  setup { @user = create(:user, email: "ann@example.com") }
 
   test "sign in with valid credentials creates session and redirects" do
     assert_difference("Whose::Session.count") { sign_in }
@@ -22,16 +22,16 @@ class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "sign in with unknown email gives the same response as a wrong password" do
-    assert_no_difference("Whose::Session.count") { sign_in(email_address: "nobody@example.com") }
+    assert_no_difference("Whose::Session.count") { sign_in(email: "nobody@example.com") }
 
     assert_response :unprocessable_content
     assert_equal I18n.t("whose.sessions.invalid"), flash[:alert]
   end
 
   test "unconfirmed user cannot sign in" do
-    create(:user, :unconfirmed, email_address: "bob@example.com")
+    create(:user, :unconfirmed, email: "bob@example.com")
 
-    assert_no_difference("Whose::Session.count") { sign_in(email_address: "bob@example.com") }
+    assert_no_difference("Whose::Session.count") { sign_in(email: "bob@example.com") }
 
     assert_response :unprocessable_content
     assert_equal I18n.t("whose.sessions.unconfirmed"), flash[:alert]
@@ -39,7 +39,7 @@ class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "sign in without a password parameter is unprocessable" do
-    post session_path, params: { email_address: "ann@example.com" }
+    post session_path, params: { email: "ann@example.com" }
 
     assert_response :unprocessable_content
     assert_equal I18n.t("whose.sessions.invalid"), flash[:alert]
@@ -95,8 +95,8 @@ class Whose::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def sign_in(email_address: "ANN@example.com", password: "password123")
-    post session_path, params: { email_address:, password: }
+  def sign_in(email: "ANN@example.com", password: "password123")
+    post session_path, params: { email:, password: }
   end
 
   def signed_cookies

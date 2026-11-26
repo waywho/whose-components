@@ -20,9 +20,9 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "sign up with taken email gives the same response as a new email" do
-    owner = create(:user, email_address: "ann@example.com")
-    responses = [ "bob@example.com", "ANN@Example.com" ].map do |email_address|
-      sign_up(email_address:)
+    owner = create(:user, email: "ann@example.com")
+    responses = [ "bob@example.com", "ANN@Example.com" ].map do |email|
+      sign_up(email:)
       [ response.status, response.location, flash[:notice] ]
     end
 
@@ -34,7 +34,7 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "sign up with the email of an unconfirmed user sends a new confirmation" do
-    owner = create(:user, :unconfirmed, email_address: "ann@example.com")
+    owner = create(:user, :unconfirmed, email: "ann@example.com")
 
     assert_no_difference("User.count") { sign_up }
 
@@ -47,7 +47,7 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   test "invalid sign up with taken email gives the same response as with a new email" do
     sign_up(first_name: "", password_confirmation: "different123")
     new_email_response = [ response.status, response.body ]
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
 
     assert_no_difference("User.count") { sign_up(first_name: "", password_confirmation: "different123") }
 
@@ -63,8 +63,8 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "signed in user on sign up page redirects" do
-    create(:user, email_address: "ann@example.com")
-    post session_path, params: { email_address: "ann@example.com", password: "password123" }
+    create(:user, email: "ann@example.com")
+    post session_path, params: { email: "ann@example.com", password: "password123" }
 
     get new_registration_path
 
@@ -72,10 +72,10 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "signed in user cannot sign up" do
-    create(:user, email_address: "ann@example.com")
-    post session_path, params: { email_address: "ann@example.com", password: "password123" }
+    create(:user, email: "ann@example.com")
+    post session_path, params: { email: "ann@example.com", password: "password123" }
 
-    assert_no_difference("User.count") { sign_up(email_address: "bob@example.com") }
+    assert_no_difference("User.count") { sign_up(email: "bob@example.com") }
 
     assert_redirected_to "/dashboard"
     assert_no_enqueued_emails
@@ -101,9 +101,9 @@ class Whose::RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
-  def sign_up(email_address: "ann@example.com", password: "password123", password_confirmation: password,
+  def sign_up(email: "ann@example.com", password: "password123", password_confirmation: password,
               first_name: "Ann", last_name: "Lee", **extra)
     post registration_path,
-         params: { user: { email_address:, password:, password_confirmation:, first_name:, last_name:, **extra } }
+         params: { user: { email:, password:, password_confirmation:, first_name:, last_name:, **extra } }
   end
 end

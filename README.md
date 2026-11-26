@@ -147,7 +147,7 @@ The install generator includes `Whose::Authentication` in `ApplicationController
 | `after_sign_in_path` | `root_path` of the app, or `"/"` if the app has no root route |
 | `after_sign_up_path` | `new_session_path` |
 | `after_sign_out_path` | `new_session_path` |
-| `sign_up_params` | `params.expect(user: %i[first_name last_name email_address password password_confirmation])` |
+| `sign_up_params` | `params.expect(user: %i[first_name last_name email password password_confirmation])` |
 | `after_sign_up(user)` | Does nothing. It runs after a user signs up. |
 
 After sign-in, a user goes back to the page that they first asked for. `after_sign_in_path` applies only when there is no such page.
