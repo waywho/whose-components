@@ -1,0 +1,39 @@
+name: Publish to RubyGems
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "The release tag to publish. Example: v0.3.0."
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.9
+
+      # Trusted publishing: RubyGems trusts this workflow through OIDC, so no API key is stored.
+      # RubyGems needs the owner account only for the first push of a new gem.
+      - name: Get a RubyGems push key
+        uses: rubygems/configure-rubygems-credentials@v2.2.0
+        with:
+          owner: ${{ vars.RUBYGEMS_OWNER_ID }}
+
+      - name: Publish the gem
+        run: |
+          gem build whose-components.gemspec --output whose-components.gem
+          gem push whose-components.gem
