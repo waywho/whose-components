@@ -13,7 +13,7 @@ gem "pagy", "~> 43.0"
 group :development, :test do
   gem "factory_bot_rails"
   gem "capybara"
-  gem "selenium-webdriver"
+  gem "cuprite"
   gem "rubocop-rails-omakase", require: false
 end
 
