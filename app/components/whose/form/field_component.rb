@@ -15,6 +15,9 @@ class Whose::Form::FieldComponent < ViewComponent::Base
     toggle: "h-5 w-9 shrink-0 cursor-pointer appearance-none rounded-full bg-border transition-colors checked:bg-accent " \
             "before:m-0.5 before:block before:size-4 before:rounded-full before:bg-surface before:transition-transform " \
             "checked:before:translate-x-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+    select_wrapper: "grid",
+    select: "col-start-1 row-start-1 appearance-none pr-10",
+    select_caret: "pointer-events-none col-start-1 row-start-1 mr-2.5 size-5 self-center justify-self-end text-fg",
     password_wrapper: "relative",
     password_input: "pr-16",
     password_hidden: "hidden",

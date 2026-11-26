@@ -48,15 +48,20 @@ module Whose
       def select(method, choices = nil, options = {}, html_options = {}, &block)
         label, hint = options.values_at(:label, :hint)
         field(method, label:, hint:) do |component|
-          super(method, choices, options.except(:label, :hint), input_options(component, html_options), &block)
+          with_caret do
+            super(method, choices, options.except(:label, :hint),
+                  input_options(component, html_options, field_classes[:select]), &block)
+          end
         end
       end
 
       def collection_select(method, collection, value_method, text_method, options = {}, html_options = {})
         label, hint = options.values_at(:label, :hint)
         field(method, label:, hint:) do |component|
-          super(method, collection, value_method, text_method, options.except(:label, :hint),
-                input_options(component, html_options))
+          with_caret do
+            super(method, collection, value_method, text_method, options.except(:label, :hint),
+                  input_options(component, html_options, field_classes[:select]))
+          end
         end
       end
 
@@ -129,6 +134,13 @@ module Whose
           ActionView::Helpers::FormBuilder.instance_method(:checkbox)
                                           .bind_call(self, attribute, checkbox_options, checked_value, unchecked_value)
         end
+      end
+
+      def with_caret
+        caret = tag.svg(tag.path(d: "m6 8 4 4 4-4"), viewBox: "0 0 20 20", fill: "none", stroke: "currentColor",
+                                                     "stroke-width": 1.5, class: field_classes[:select_caret],
+                                                     aria: { hidden: true })
+        content_tag(:div, yield + caret, class: field_classes[:select_wrapper])
       end
 
       def password_button
