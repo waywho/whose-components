@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- The system tests use Cuprite, as `hub` does. `selenium-webdriver` is gone from the Gemfile.
+- **Cause:** Capybara 3.40.0 resets each session with the CDP command `Storage.clearDataForOrigin` and `origin: "*"`. Chrome 158 rejects it with "* is not a valid URL". The fix is upstream as teamcapybara/capybara#2865, not released.
+- The GitHub runner image `20261122.9.1` has Chrome 158, so every system test failed on it, also on `main`.
+- The nav test resizes with `page.current_window.resize_to`. The modal test clicks outside with the Cuprite mouse.
 
 ## [0.2.1] - 2026-11-26
 ### Changed
