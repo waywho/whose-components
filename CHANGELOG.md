@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- `publish.yml` publishes the gem to RubyGems on each `v*` tag push. The deploy key pushes the release tag, so the push starts the workflow.
+- `publish.yml` also runs by hand with a tag input. This publishes `v0.3.0`, which the first publish missed.
+### Changed
+- `release.yml` only releases and tags. It has no publish step and no `id-token` permission.
+- The publish uses `rubygems/configure-rubygems-credentials@v2.2.0` with `owner` from the `RUBYGEMS_OWNER_ID` repository variable. RubyGems needs the owner for the first push of a new gem.
+### Fixed
+- The first publish of `0.3.0` failed, because the workflow did not name the owner account.
 
 ## [0.3.0] - 2026-11-26
 ### Added
