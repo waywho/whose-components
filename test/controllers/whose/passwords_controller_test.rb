@@ -5,12 +5,12 @@ require "test_helper"
 class Whose::PasswordsControllerTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
 
-  setup { @user = create(:user, email_address: "ann@example.com", password: "old-password-1") }
+  setup { @user = create(:user, email: "ann@example.com", password: "old-password-1") }
 
   test "reset request same response for unknown email" do
     unconfirmed = create(:user, :unconfirmed)
-    responses = [ "ANN@example.com", "nobody@example.com", unconfirmed.email_address ].map do |email_address|
-      post passwords_path, params: { email_address: }
+    responses = [ "ANN@example.com", "nobody@example.com", unconfirmed.email ].map do |email|
+      post passwords_path, params: { email: }
       [ response.status, response.location, flash[:notice] ]
     end
 

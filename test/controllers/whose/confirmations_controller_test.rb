@@ -5,7 +5,7 @@ require "test_helper"
 class Whose::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
 
-  setup { @user = create(:user, :unconfirmed, email_address: "ann@example.com") }
+  setup { @user = create(:user, :unconfirmed, email: "ann@example.com") }
 
   test "confirmation link page does not confirm or sign in" do
     assert_no_difference("Whose::Session.count") { get confirmation_path(token) }
@@ -46,8 +46,8 @@ class Whose::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "resend gives same response for unknown email" do
-    responses = [ "ANN@example.com", "nobody@example.com", create(:user).email_address ].map do |email_address|
-      post confirmations_path, params: { email_address: }
+    responses = [ "ANN@example.com", "nobody@example.com", create(:user).email ].map do |email|
+      post confirmations_path, params: { email: }
       [ response.status, response.location, flash[:notice] ]
     end
 

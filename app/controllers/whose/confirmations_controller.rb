@@ -10,7 +10,7 @@ class Whose::ConfirmationsController < ::ApplicationController
   def new; end
 
   def create
-    user = User.find_by(email_address: params.expect(:email_address))
+    user = User.find_by(email: params.expect(:email))
     Whose::AuthMailer.confirmation(user).deliver_later if user && !user.confirmed?
     redirect_to new_session_path, notice: t("whose.confirmations.sent")
   end

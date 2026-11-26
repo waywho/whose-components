@@ -4,7 +4,7 @@ require "test_helper"
 
 class Whose::AuthMailerTest < ActionMailer::TestCase
   test "confirmation sends a link that confirms the user" do
-    user = create(:user, :unconfirmed, email_address: "ann@example.com")
+    user = create(:user, :unconfirmed, email: "ann@example.com")
 
     mail = Whose::AuthMailer.confirmation(user)
 
@@ -16,7 +16,7 @@ class Whose::AuthMailerTest < ActionMailer::TestCase
   end
 
   test "account exists sends sign in and password reset links" do
-    user = create(:user, email_address: "ann@example.com")
+    user = create(:user, email: "ann@example.com")
 
     mail = Whose::AuthMailer.account_exists(user)
 
@@ -29,7 +29,7 @@ class Whose::AuthMailerTest < ActionMailer::TestCase
   end
 
   test "password reset sends a link that finds the user" do
-    user = create(:user, email_address: "ann@example.com")
+    user = create(:user, email: "ann@example.com")
 
     mail = Whose::AuthMailer.password_reset(user)
 

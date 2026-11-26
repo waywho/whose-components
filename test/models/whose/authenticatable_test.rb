@@ -4,20 +4,20 @@ require "test_helper"
 
 class Whose::AuthenticatableTest < ActiveSupport::TestCase
   test "normalizes email address" do
-    user = create(:user, email_address: " Ann@Example.COM ")
+    user = create(:user, email: " Ann@Example.COM ")
 
-    assert_equal "ann@example.com", user.reload.email_address
-    assert_equal user, User.authenticate_by(email_address: "ANN@example.com", password: "password123")
+    assert_equal "ann@example.com", user.reload.email
+    assert_equal user, User.authenticate_by(email: "ANN@example.com", password: "password123")
   end
 
   test "requires a unique email address" do
-    create(:user, email_address: "ann@example.com")
+    create(:user, email: "ann@example.com")
 
-    assert_not build(:user, email_address: "ANN@example.com").valid?
+    assert_not build(:user, email: "ANN@example.com").valid?
   end
 
   test "rejects an email address without the correct format" do
-    assert_not build(:user, email_address: "ann").valid?
+    assert_not build(:user, email: "ann").valid?
   end
 
   test "requires a password of at least 8 characters" do

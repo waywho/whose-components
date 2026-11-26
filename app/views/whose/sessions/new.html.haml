@@ -8,7 +8,7 @@
       .flex.flex-col.gap-4
         - if @unconfirmed
           = render(Whose::LinkComponent.new(href: new_confirmation_path, class: "text-sm")) { t(".resend") }
-        = form.email_field :email_address, label: t(".email_address"), value: params[:email_address],
+        = form.email_field :email, label: t(".email"), value: params[:email],
           required: true, autofocus: true, autocomplete: "username"
         = form.password_field :password, label: t(".password"), required: true, autocomplete: "current-password"
         = render(Whose::LinkComponent.new(href: new_password_path, class: "text-sm")) { t(".forgot_password") }

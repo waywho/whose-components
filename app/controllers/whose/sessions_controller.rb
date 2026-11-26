@@ -12,8 +12,8 @@ class Whose::SessionsController < ::ApplicationController
   end
 
   def create
-    credentials = params.permit(:email_address, :password)
-    user = User.authenticate_by(email_address: credentials[:email_address], password: credentials[:password])
+    credentials = params.permit(:email, :password)
+    user = User.authenticate_by(email: credentials[:email], password: credentials[:password])
     if user&.confirmed?
       start_new_session_for user
       redirect_to after_authentication_url
