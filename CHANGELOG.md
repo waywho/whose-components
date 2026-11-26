@@ -6,8 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.2.1] - 2026-11-26
 ### Changed
 - Check the version format, not one version
+- `select` and `collection_select` hide the browser arrow with `appearance-none`. They draw a chevron SVG in a grid over the field.
+- The field gets `pr-10`, so the text does not run under the caret.
+- The caret uses `text-fg`, so it follows light and dark mode.
+### Fixed
+- The browser arrow sat too close to the right border.
 
 ## [0.2.0] - 2026-11-15
 ### Changed
@@ -30,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An app template for `rails new` with the flags `--auth`, `--no-auth`, `--root controller#action` and `--component-gem-path`. It makes the first commit and prints the GitHub steps.
 - `bin/install-railsrc` writes the template defaults into `~/.railsrc`.
 
-[Unreleased]: https://github.com/waywho/whose-components/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/waywho/whose-components/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/waywho/whose-components/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/waywho/whose-components/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/waywho/whose-components/releases/tag/v0.1.0
