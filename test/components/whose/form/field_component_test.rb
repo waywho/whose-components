@@ -290,6 +290,12 @@ class Whose::Form::FieldComponentTest < ViewComponent::TestCase
     assert_selector "select[aria-invalid=true][aria-describedby='person_name_hint person_name_error']"
   end
 
+  def test_select_draws_its_own_caret_with_space_on_the_right
+    render_form(Person.new) { it.select(:name, %w[Ann Bob]) + it.collection_select(:admin, [ %w[Yes 1] ], :last, :first) }
+
+    assert_selector "[data-field] select.appearance-none.pr-10 + svg[aria-hidden=true].pointer-events-none", count: 2
+  end
+
   def test_toggle_renders_a_switch_with_label_after_input
     render_form(Person.new) { it.toggle(:admin, label: "Admin access", hint: "A hint") }
 
